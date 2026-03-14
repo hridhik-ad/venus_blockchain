@@ -1,0 +1,2075 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CHAINWORK — Decentralized Freelance</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;1,300&display=swap"
+        rel="stylesheet" />
+    <style>
+        :root {
+            --cream: #faf8f3;
+            --cream2: #f3f0e8;
+            --ink: #0f0e0c;
+            --navy: #0d1b3e;
+            --accent: #e8642c;
+            --blush: #f2d4c2;
+            --sage: #b8c9b0;
+            --gold: #c9a96e;
+            --muted: #9a9488;
+            --border: rgba(15, 14, 12, 0.1);
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--cream);
+            color: var(--ink);
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 300;
+            overflow-x: hidden;
+            cursor: none;
+        }
+
+        /* ── CURSOR ── */
+        #cur-dot {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: var(--accent);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: width .2s, height .2s, background .2s;
+            will-change: left, top;
+        }
+
+        #cur-ring {
+            position: fixed;
+            width: 44px;
+            height: 44px;
+            border: 1.5px solid var(--ink);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9998;
+            transform: translate(-50%, -50%);
+            will-change: left, top;
+            transition: width .3s, height .3s, border-color .3s, opacity .3s;
+            opacity: 0.35;
+        }
+
+        body.hovering #cur-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--navy);
+        }
+
+        body.hovering #cur-ring {
+            width: 64px;
+            height: 64px;
+            border-color: var(--accent);
+            opacity: 0.6;
+        }
+
+        /* ── CANVAS PARTICLES ── */
+        #orb-canvas {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.65;
+        }
+
+        /* ── NAV ── */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 28px 60px;
+            transition: background .4s, padding .4s, box-shadow .4s;
+        }
+
+        nav.scrolled {
+            background: rgba(250, 248, 243, 0.92);
+            backdrop-filter: blur(16px);
+            padding: 18px 60px;
+            box-shadow: 0 1px 0 var(--border);
+        }
+
+        .nav-brand {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 22px;
+            letter-spacing: -0.5px;
+            color: var(--ink);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .brand-badge {
+            background: var(--accent);
+            color: #fff;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 3px 7px;
+            border-radius: 2px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 36px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            font-family: 'Syne', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--muted);
+            text-decoration: none;
+            letter-spacing: 0.3px;
+            transition: color .2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--ink);
+        }
+
+        .nav-btn {
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            font-size: 12px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            background: var(--ink);
+            color: var(--cream);
+            padding: 12px 28px;
+            border-radius: 100px;
+            text-decoration: none;
+            transition: background .2s, transform .15s;
+            border: 2px solid var(--ink);
+        }
+
+        .nav-btn:hover {
+            background: var(--navy);
+            transform: translateY(-2px);
+        }
+
+        /* ── HERO ── */
+        .hero {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            padding: 120px 60px 80px;
+            position: relative;
+            overflow: hidden;
+            gap: 40px;
+        }
+
+        .hero-left {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Syne', sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 32px;
+        }
+
+        .hero-eyebrow::before {
+            content: '';
+            width: 28px;
+            height: 1.5px;
+            background: var(--accent);
+        }
+
+        .hero-h1 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(60px, 6.5vw, 96px);
+            line-height: 1.0;
+            letter-spacing: -2px;
+            color: var(--ink);
+            margin-bottom: 32px;
+        }
+
+        .hero-h1 em {
+            font-style: italic;
+            color: var(--accent);
+        }
+
+        .hero-h1 .outline-text {
+            -webkit-text-stroke: 2px var(--ink);
+            color: transparent;
+        }
+
+        .hero-sub {
+            font-size: 16px;
+            line-height: 1.75;
+            color: var(--muted);
+            max-width: 440px;
+            margin-bottom: 48px;
+        }
+
+        .hero-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            font-size: 13px;
+            letter-spacing: 0.5px;
+            background: var(--accent);
+            color: #fff;
+            padding: 16px 36px;
+            border-radius: 100px;
+            text-decoration: none;
+            transition: transform .15s, box-shadow .2s;
+            box-shadow: 0 8px 32px rgba(232, 100, 44, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 14px 40px rgba(232, 100, 44, 0.4);
+        }
+
+        .btn-ghost {
+            font-family: 'Syne', sans-serif;
+            font-weight: 600;
+            font-size: 13px;
+            color: var(--ink);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: gap .2s;
+        }
+
+        .btn-ghost:hover {
+            gap: 14px;
+        }
+
+        .btn-ghost::after {
+            content: '→';
+            font-size: 18px;
+        }
+
+        .hero-trust {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-top: 52px;
+            padding-top: 36px;
+            border-top: 1px solid var(--border);
+        }
+
+        .trust-avatars {
+            display: flex;
+        }
+
+        .trust-av {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 2.5px solid var(--cream);
+            margin-left: -10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            font-size: 12px;
+            color: #fff;
+        }
+
+        .trust-av:first-child {
+            margin-left: 0;
+        }
+
+        .trust-text {
+            font-size: 13px;
+            color: var(--muted);
+            line-height: 1.4;
+        }
+
+        .trust-text strong {
+            color: var(--ink);
+            font-weight: 400;
+        }
+
+        /* HERO RIGHT — floating card */
+        .hero-right {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-card-wrap {
+            perspective: 1000px;
+            width: 100%;
+            max-width: 460px;
+        }
+
+        .hero-card {
+            background: #fff;
+            border-radius: 24px;
+            padding: 36px;
+            box-shadow: 0 32px 80px rgba(15, 14, 12, 0.12), 0 2px 8px rgba(15, 14, 12, 0.06);
+            transform-style: preserve-3d;
+            transition: box-shadow .3s;
+            will-change: transform;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent), var(--gold), var(--sage));
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 28px;
+        }
+
+        .card-profile {
+            display: flex;
+            gap: 14px;
+            align-items: center;
+        }
+
+        .card-avatar {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--gold));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 18px;
+            color: #fff;
+            flex-shrink: 0;
+        }
+
+        .card-name {
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            font-size: 17px;
+            color: var(--ink);
+        }
+
+        .card-role {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 2px;
+        }
+
+        .card-verified {
+            background: rgba(184, 201, 176, 0.3);
+            color: #4a7a40;
+            font-family: 'Syne', sans-serif;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            padding: 4px 10px;
+            border-radius: 100px;
+        }
+
+        .card-gig-title {
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            font-size: 20px;
+            color: var(--ink);
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+
+        .card-gig-desc {
+            font-size: 13px;
+            color: var(--muted);
+            line-height: 1.65;
+            margin-bottom: 24px;
+        }
+
+        .card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+
+        .tag {
+            font-family: 'Syne', sans-serif;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 5px 12px;
+            border-radius: 100px;
+            border: 1px solid var(--border);
+            color: var(--muted);
+            background: var(--cream2);
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+        }
+
+        .card-price {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 26px;
+            color: var(--ink);
+        }
+
+        .card-price span {
+            font-size: 13px;
+            color: var(--muted);
+            font-weight: 400;
+        }
+
+        .card-hire {
+            background: var(--ink);
+            color: var(--cream);
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            font-size: 12px;
+            letter-spacing: 0.5px;
+            padding: 12px 24px;
+            border-radius: 100px;
+            text-decoration: none;
+            transition: background .2s, transform .15s;
+        }
+
+        .card-hire:hover {
+            background: var(--navy);
+            transform: translateY(-2px);
+        }
+
+        /* floating mini cards */
+        .float-badge {
+            position: absolute;
+            background: #fff;
+            border-radius: 14px;
+            padding: 12px 16px;
+            box-shadow: 0 16px 40px rgba(15, 14, 12, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: floatY 4s ease-in-out infinite;
+        }
+
+        .float-badge:nth-child(1) {
+            bottom: -24px;
+            left: -40px;
+            animation-delay: 0s;
+        }
+
+        .float-badge:nth-child(2) {
+            top: -20px;
+            right: -32px;
+            animation-delay: 1.5s;
+        }
+
+        @keyframes floatY {
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-12px);
+            }
+        }
+
+        .float-icon {
+            font-size: 24px;
+        }
+
+        .float-text {}
+
+        .float-label {
+            font-size: 10px;
+            color: var(--muted);
+            font-family: 'Syne', sans-serif;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .float-val {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 15px;
+            color: var(--ink);
+        }
+
+        /* ── STATS STRIP ── */
+        .stats-strip {
+            background: var(--ink);
+            padding: 48px 60px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-num {
+            font-family: 'Playfair Display', serif;
+            font-size: 52px;
+            font-weight: 700;
+            color: var(--cream);
+            line-height: 1;
+            margin-bottom: 6px;
+        }
+
+        .stat-num em {
+            color: var(--accent);
+            font-style: normal;
+        }
+
+        .stat-label {
+            font-family: 'Syne', sans-serif;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: rgba(250, 248, 243, 0.4);
+        }
+
+        .stat-divider {
+            width: 1px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* ── SERVICES ── */
+        .services-section {
+            padding: 140px 60px;
+            position: relative;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 72px;
+        }
+
+        .section-eyebrow {
+            font-family: 'Syne', sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(40px, 4.5vw, 64px);
+            line-height: 1.1;
+            color: var(--ink);
+            letter-spacing: -1.5px;
+        }
+
+        .section-title em {
+            font-style: italic;
+            color: var(--accent);
+        }
+
+        .view-all-link {
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            font-size: 13px;
+            color: var(--ink);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1.5px solid var(--ink);
+            padding-bottom: 2px;
+            transition: gap .2s, border-color .2s;
+        }
+
+        .view-all-link:hover {
+            gap: 14px;
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .view-all-link::after {
+            content: '→';
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .svc-card {
+            background: #fff;
+            border-radius: 20px;
+            padding: 36px 30px;
+            border: 1px solid var(--border);
+            cursor: none;
+            transition: box-shadow .3s;
+            position: relative;
+            overflow: hidden;
+            transform-style: preserve-3d;
+            will-change: transform;
+        }
+
+        .svc-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(232, 100, 44, 0.05), transparent 60%);
+            opacity: 0;
+            transition: opacity .3s;
+            pointer-events: none;
+        }
+
+        .svc-card:hover::after {
+            opacity: 1;
+        }
+
+        .svc-card:hover {
+            box-shadow: 0 24px 60px rgba(15, 14, 12, 0.1);
+        }
+
+        .svc-icon-wrap {
+            width: 56px;
+            height: 56px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            margin-bottom: 24px;
+            position: relative;
+        }
+
+        .svc-num {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            width: 20px;
+            height: 20px;
+            background: var(--cream2);
+            border-radius: 50%;
+            font-family: 'Syne', sans-serif;
+            font-size: 9px;
+            font-weight: 800;
+            color: var(--muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .svc-name {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 18px;
+            color: var(--ink);
+            margin-bottom: 10px;
+            line-height: 1.2;
+        }
+
+        .svc-desc {
+            font-size: 13px;
+            color: var(--muted);
+            line-height: 1.65;
+            margin-bottom: 24px;
+        }
+
+        .svc-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .svc-count {
+            font-family: 'Syne', sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .svc-arrow {
+            width: 36px;
+            height: 36px;
+            border: 1.5px solid var(--border);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: var(--muted);
+            transition: background .2s, border-color .2s, color .2s, transform .2s;
+        }
+
+        .svc-card:hover .svc-arrow {
+            background: var(--ink);
+            border-color: var(--ink);
+            color: var(--cream);
+            transform: rotate(-45deg);
+        }
+
+        /* ── TALENT ── */
+        .talent-section {
+            padding: 0 60px 140px;
+        }
+
+        .talent-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 72px;
+        }
+
+        .talent-card {
+            background: #fff;
+            border-radius: 24px;
+            padding: 36px 30px;
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+            transform-style: preserve-3d;
+            will-change: transform;
+            cursor: none;
+            transition: box-shadow .3s;
+        }
+
+        .talent-card:hover {
+            box-shadow: 0 32px 80px rgba(15, 14, 12, 0.12);
+        }
+
+        .talent-card.featured-card {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            align-items: center;
+            gap: 40px;
+            padding: 48px 40px;
+        }
+
+        .talent-av {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 28px;
+            color: #fff;
+            margin-bottom: 20px;
+            flex-shrink: 0;
+        }
+
+        .featured-card .talent-av {
+            width: 100px;
+            height: 100px;
+            font-size: 36px;
+            margin-bottom: 0;
+        }
+
+        .talent-role {
+            font-family: 'Syne', sans-serif;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 6px;
+        }
+
+        .talent-name {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            font-size: 26px;
+            color: var(--ink);
+            margin-bottom: 12px;
+        }
+
+        .featured-card .talent-name {
+            font-size: 36px;
+        }
+
+        .talent-bio {
+            font-size: 13px;
+            color: var(--muted);
+            line-height: 1.65;
+            margin-bottom: 20px;
+        }
+
+        .talent-skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+
+        .skill-tag {
+            font-family: 'Syne', sans-serif;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 100px;
+            background: var(--cream2);
+            color: var(--ink);
+        }
+
+        .talent-rate-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+        }
+
+        .talent-rate {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 22px;
+            color: var(--ink);
+        }
+
+        .talent-rate small {
+            font-size: 12px;
+            color: var(--muted);
+            font-weight: 400;
+        }
+
+        .stars {
+            color: var(--gold);
+            font-size: 13px;
+            letter-spacing: 1px;
+        }
+
+        .review-count {
+            font-size: 11px;
+            color: var(--muted);
+            font-family: 'Syne', sans-serif;
+        }
+
+        .talent-right-meta {
+            text-align: right;
+        }
+
+        .talent-big-rating {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            font-size: 56px;
+            color: var(--ink);
+            line-height: 1;
+        }
+
+        .talent-reviews-label {
+            font-size: 12px;
+            color: var(--muted);
+            font-family: 'Syne', sans-serif;
+            margin-top: 6px;
+        }
+
+        /* ── HOW IT WORKS ── */
+        .how-section {
+            background: var(--navy);
+            padding: 140px 60px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .how-section .section-eyebrow {
+            color: var(--blush);
+        }
+
+        .how-section .section-title {
+            color: var(--cream);
+        }
+
+        .how-section .section-title em {
+            color: var(--blush);
+        }
+
+        .how-bg-text {
+            position: absolute;
+            font-family: 'Playfair Display', serif;
+            font-size: 280px;
+            font-weight: 900;
+            color: rgba(255, 255, 255, 0.03);
+            top: 50%;
+            right: -40px;
+            transform: translateY(-50%);
+            pointer-events: none;
+            letter-spacing: -12px;
+            white-space: nowrap;
+        }
+
+        .how-steps {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0;
+            margin-top: 72px;
+            position: relative;
+        }
+
+        .how-steps::before {
+            content: '';
+            position: absolute;
+            top: 28px;
+            left: 14px;
+            right: 14px;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            z-index: 0;
+        }
+
+        .how-step {
+            padding: 0 28px;
+        }
+
+        .step-dot {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1.5px solid rgba(255, 255, 255, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 18px;
+            color: var(--blush);
+            margin-bottom: 32px;
+            position: relative;
+            z-index: 1;
+            transition: background .3s, border-color .3s;
+        }
+
+        .how-step:hover .step-dot {
+            background: rgba(232, 100, 44, 0.2);
+            border-color: var(--accent);
+        }
+
+        .step-title {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 20px;
+            color: var(--cream);
+            margin-bottom: 12px;
+        }
+
+        .step-desc {
+            font-size: 13px;
+            color: rgba(250, 248, 243, 0.5);
+            line-height: 1.7;
+        }
+
+        /* ── BLOCKCHAIN FEATURES ── */
+        .features-section {
+            padding: 140px 60px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 100px;
+            align-items: center;
+            margin-top: 72px;
+        }
+
+        .features-list {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .feature-item {
+            display: flex;
+            gap: 24px;
+            padding: 32px 0;
+            border-bottom: 1px solid var(--border);
+            cursor: none;
+            transition: padding-left .25s;
+        }
+
+        .feature-item:first-child {
+            border-top: 1px solid var(--border);
+        }
+
+        .feature-item:hover {
+            padding-left: 12px;
+        }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            flex-shrink: 0;
+            border: 1px solid var(--border);
+            background: var(--cream2);
+            transition: background .25s, border-color .25s;
+        }
+
+        .feature-item:hover .feature-icon {
+            background: rgba(232, 100, 44, 0.08);
+            border-color: rgba(232, 100, 44, 0.3);
+        }
+
+        .feature-title {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 20px;
+            color: var(--ink);
+            margin-bottom: 8px;
+        }
+
+        .feature-desc {
+            font-size: 13px;
+            color: var(--muted);
+            line-height: 1.65;
+        }
+
+        /* visual side */
+        .features-visual {
+            position: relative;
+            height: 500px;
+        }
+
+        .vis-card {
+            position: absolute;
+            background: #fff;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            padding: 24px 28px;
+            box-shadow: 0 20px 60px rgba(15, 14, 12, 0.08);
+            animation: floatVis 5s ease-in-out infinite;
+        }
+
+        .vis-card:nth-child(1) {
+            top: 0;
+            left: 0;
+            right: 0;
+            animation-delay: 0s;
+        }
+
+        .vis-card:nth-child(2) {
+            bottom: 40px;
+            left: 20px;
+            right: 80px;
+            animation-delay: 1.2s;
+        }
+
+        .vis-card:nth-child(3) {
+            bottom: 0;
+            right: 0;
+            width: 180px;
+            animation-delay: 2.4s;
+        }
+
+        @keyframes floatVis {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .vis-label {
+            font-family: 'Syne', sans-serif;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .vis-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--sage);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1)
+            }
+
+            50% {
+                opacity: .4;
+                transform: scale(.7)
+            }
+        }
+
+        .vis-amount {
+            font-family: 'Playfair Display', serif;
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--ink);
+            margin-bottom: 6px;
+        }
+
+        .vis-sub {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .vis-hash {
+            font-family: 'DM Sans', monospace;
+            font-size: 11px;
+            color: var(--muted);
+            margin-bottom: 4px;
+            letter-spacing: 0.5px;
+        }
+
+        .vis-status {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 16px;
+            color: #4a7a40;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .vis-status::before {
+            content: '✓';
+        }
+
+        .vis-mini-label {
+            font-size: 10px;
+            color: var(--muted);
+            font-family: 'Syne', sans-serif;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 6px;
+        }
+
+        .vis-mini-val {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 22px;
+            color: var(--ink);
+        }
+
+        /* ── CTA ── */
+        .cta-section {
+            margin: 0 60px 140px;
+            background: var(--ink);
+            border-radius: 32px;
+            padding: 100px 80px;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            align-items: center;
+            gap: 60px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(232, 100, 44, 0.15) 0%, transparent 70%);
+            top: -100px;
+            right: -100px;
+            pointer-events: none;
+        }
+
+        .cta-section::after {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(201, 169, 110, 0.1) 0%, transparent 70%);
+            bottom: -80px;
+            left: 40px;
+            pointer-events: none;
+        }
+
+        .cta-eyebrow {
+            font-family: 'Syne', sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: var(--blush);
+            margin-bottom: 20px;
+        }
+
+        .cta-title {
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(48px, 5vw, 80px);
+            color: var(--cream);
+            line-height: 1.05;
+            letter-spacing: -2px;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-title em {
+            font-style: italic;
+            color: var(--accent);
+        }
+
+        .cta-sub {
+            font-size: 16px;
+            color: rgba(250, 248, 243, 0.5);
+            line-height: 1.65;
+            max-width: 420px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+            flex-shrink: 0;
+        }
+
+        .btn-light {
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            font-size: 13px;
+            letter-spacing: 0.5px;
+            background: var(--cream);
+            color: var(--ink);
+            padding: 18px 44px;
+            border-radius: 100px;
+            text-decoration: none;
+            white-space: nowrap;
+            transition: background .2s, transform .15s;
+        }
+
+        .btn-light:hover {
+            background: #fff;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline-light {
+            font-family: 'Syne', sans-serif;
+            font-weight: 600;
+            font-size: 13px;
+            color: rgba(250, 248, 243, 0.6);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: color .2s, gap .2s;
+        }
+
+        .btn-outline-light:hover {
+            color: var(--cream);
+            gap: 14px;
+        }
+
+        .btn-outline-light::after {
+            content: '→';
+        }
+
+        /* ── FOOTER ── */
+        footer {
+            padding: 80px 60px 48px;
+            border-top: 1px solid var(--border);
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 60px;
+            margin-bottom: 80px;
+        }
+
+        .footer-brand-name {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 28px;
+            color: var(--ink);
+            letter-spacing: -0.5px;
+            margin-bottom: 14px;
+        }
+
+        .footer-brand-desc {
+            font-size: 14px;
+            color: var(--muted);
+            line-height: 1.7;
+            max-width: 260px;
+            margin-bottom: 28px;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 12px;
+        }
+
+        .social-btn {
+            width: 40px;
+            height: 40px;
+            border: 1.5px solid var(--border);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            text-decoration: none;
+            transition: background .2s, border-color .2s;
+        }
+
+        .social-btn:hover {
+            background: var(--ink);
+            border-color: var(--ink);
+        }
+
+        .footer-col-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 24px;
+        }
+
+        .footer-col a {
+            display: block;
+            font-size: 14px;
+            color: var(--ink);
+            text-decoration: none;
+            margin-bottom: 14px;
+            transition: color .2s;
+        }
+
+        .footer-col a:hover {
+            color: var(--accent);
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 40px;
+            border-top: 1px solid var(--border);
+            font-family: 'Syne', sans-serif;
+            font-size: 12px;
+            color: var(--muted);
+            font-weight: 600;
+        }
+
+        /* ── REVEAL ANIMATIONS ── */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity .8s cubic-bezier(.16, 1, .3, 1), transform .8s cubic-bezier(.16, 1, .3, 1);
+        }
+
+        .reveal.up {
+            transform: translateY(40px);
+        }
+
+        .reveal.left {
+            transform: translateX(-40px);
+        }
+
+        .reveal.right {
+            transform: translateX(40px);
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translate(0);
+        }
+
+        .reveal-d1 {
+            transition-delay: .1s;
+        }
+
+        .reveal-d2 {
+            transition-delay: .2s;
+        }
+
+        .reveal-d3 {
+            transition-delay: .3s;
+        }
+
+        .reveal-d4 {
+            transition-delay: .4s;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="cur-dot"></div>
+    <div id="cur-ring"></div>
+    <canvas id="orb-canvas"></canvas>
+
+    <!-- NAV -->
+    <nav id="navbar">
+        <a href="#" class="nav-brand">
+            Chainwork
+            <span class="brand-badge">Beta</span>
+        </a>
+        <ul class="nav-links">
+            <li><a href="#">Services</a></li>
+            <li><a href="#">Talent</a></li>
+            <li><a href="#">How It Works</a></li>
+            <li><a href="#">Protocol</a></li>
+        </ul>
+        <a href="#" class="nav-btn">Connect Wallet</a>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-left">
+            <div class="hero-eyebrow">Blockchain-Powered Freelance</div>
+            <h1 class="hero-h1">
+                Hire the<br>
+                <em>World's Best</em><br>
+                <span class="outline-text">Web3 Talent</span>
+            </h1>
+            <p class="hero-sub">A decentralized marketplace where smart contracts replace middlemen — payments are
+                trustless, reputations are on-chain, and opportunity has no borders.</p>
+            <div class="hero-actions">
+                <a href="#" class="btn-primary">Browse Talent →</a>
+                <a href="#" class="btn-ghost">How it Works</a>
+            </div>
+            <div class="hero-trust">
+                <div class="trust-avatars">
+                    <div class="trust-av" style="background:linear-gradient(135deg,#e8642c,#c9a96e)">KR</div>
+                    <div class="trust-av" style="background:linear-gradient(135deg,#0d1b3e,#4a6fa5)">SR</div>
+                    <div class="trust-av" style="background:linear-gradient(135deg,#b8c9b0,#4a7a40)">AM</div>
+                    <div class="trust-av" style="background:linear-gradient(135deg,#f2d4c2,#e8642c)">LJ</div>
+                </div>
+                <div class="trust-text">
+                    Trusted by <strong>12,000+ freelancers</strong><br>across 94 countries
+                </div>
+            </div>
+        </div>
+
+        <div class="hero-right">
+            <div style="position:relative">
+                <div class="float-badge" style="animation-delay:0s">
+                    <div class="float-icon">🔒</div>
+                    <div class="float-text">
+                        <div class="float-label">Escrow Active</div>
+                        <div class="float-val">0.08 ETH</div>
+                    </div>
+                </div>
+                <div class="float-badge" style="animation-delay:1.5s; bottom:auto; top:-20px; right:-32px; left:auto">
+                    <div class="float-icon">⭐</div>
+                    <div class="float-text">
+                        <div class="float-label">Rating</div>
+                        <div class="float-val">4.99 / 5.0</div>
+                    </div>
+                </div>
+                <div class="hero-card-wrap">
+                    <div class="hero-card" id="hero3dCard">
+                        <div class="card-header">
+                            <div class="card-profile">
+                                <div class="card-avatar">KR</div>
+                                <div>
+                                    <div class="card-name">Kaito Ryu</div>
+                                    <div class="card-role">Smart Contract Engineer</div>
+                                </div>
+                            </div>
+                            <div class="card-verified">✓ Verified</div>
+                        </div>
+                        <div class="card-gig-title">DeFi Protocol Architecture & Solidity Development</div>
+                        <div class="card-gig-desc">Former Uniswap v3 contributor. I build secure, gas-optimized smart
+                            contracts with 3 CVEs disclosed and zero exploits in production.</div>
+                        <div class="card-tags">
+                            <span class="tag">Solidity</span>
+                            <span class="tag">Foundry</span>
+                            <span class="tag">EVM</span>
+                            <span class="tag">DeFi</span>
+                            <span class="tag">Auditing</span>
+                        </div>
+                        <div class="card-footer">
+                            <div class="card-price">0.08 ETH <span>/ hr</span></div>
+                            <a href="#" class="card-hire">Hire Now</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- STATS STRIP -->
+    <div class="stats-strip reveal">
+        <div class="stat-item">
+            <div class="stat-num">12<em>K+</em></div>
+            <div class="stat-label">Verified Freelancers</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+            <div class="stat-num">$4.2<em>M</em></div>
+            <div class="stat-label">Paid On-Chain</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+            <div class="stat-num">0.8<em>%</em></div>
+            <div class="stat-label">Protocol Fee</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+            <div class="stat-num">94</div>
+            <div class="stat-label">Countries</div>
+        </div>
+    </div>
+
+    <!-- SERVICES -->
+    <section class="services-section">
+        <div class="section-header">
+            <div>
+                <div class="section-eyebrow">What We Offer</div>
+                <h2 class="section-title reveal">All <em>Services</em></h2>
+            </div>
+            <a href="#" class="view-all-link">Browse All</a>
+        </div>
+        <div class="services-grid">
+            <div class="svc-card tilt-card reveal reveal-d1">
+                <div class="svc-icon-wrap" style="background:rgba(232,100,44,0.1)">
+                    <span>⬡</span>
+                    <div class="svc-num">01</div>
+                </div>
+                <div class="svc-name">Smart Contract Dev</div>
+                <div class="svc-desc">Solidity, Rust, and Move developers ready to build audited, gas-optimized
+                    contracts.</div>
+                <div class="svc-footer">
+                    <div class="svc-count">1,240 gigs</div>
+                    <div class="svc-arrow">→</div>
+                </div>
+            </div>
+            <div class="svc-card tilt-card reveal reveal-d2">
+                <div class="svc-icon-wrap" style="background:rgba(201,169,110,0.12)">
+                    <span>◈</span>
+                    <div class="svc-num">02</div>
+                </div>
+                <div class="svc-name">Web3 Design</div>
+                <div class="svc-desc">UI/UX designers specializing in dApps, NFT platforms, and DeFi dashboards.</div>
+                <div class="svc-footer">
+                    <div class="svc-count">870 gigs</div>
+                    <div class="svc-arrow">→</div>
+                </div>
+            </div>
+            <div class="svc-card tilt-card reveal reveal-d3">
+                <div class="svc-icon-wrap" style="background:rgba(184,201,176,0.2)">
+                    <span>◎</span>
+                    <div class="svc-num">03</div>
+                </div>
+                <div class="svc-name">Token Engineering</div>
+                <div class="svc-desc">Tokenomics design, whitepaper writing, and economic modeling for your protocol.
+                </div>
+                <div class="svc-footer">
+                    <div class="svc-count">420 gigs</div>
+                    <div class="svc-arrow">→</div>
+                </div>
+            </div>
+            <div class="svc-card tilt-card reveal reveal-d4">
+                <div class="svc-icon-wrap" style="background:rgba(13,27,62,0.07)">
+                    <span>🛡</span>
+                    <div class="svc-num">04</div>
+                </div>
+                <div class="svc-name">Security Audits</div>
+                <div class="svc-desc">On-chain verified audit reports from top-ranked security researchers worldwide.
+                </div>
+                <div class="svc-footer">
+                    <div class="svc-count">310 gigs</div>
+                    <div class="svc-arrow">→</div>
+                </div>
+            </div>
+            <div class="svc-card tilt-card reveal reveal-d1">
+                <div class="svc-icon-wrap" style="background:rgba(242,212,194,0.4)">
+                    <span>💻</span>
+                    <div class="svc-num">05</div>
+                </div>
+                <div class="svc-name">Frontend dApps</div>
+                <div class="svc-desc">React devs fluent in ethers.js, wagmi, RainbowKit and wallet integrations.</div>
+                <div class="svc-footer">
+                    <div class="svc-count">980 gigs</div>
+                    <div class="svc-arrow">→</div>
+                </div>
+            </div>
+            <div class="svc-card tilt-card reveal reveal-d2">
+                <div class="svc-icon-wrap" style="background:rgba(232,100,44,0.08)">
+                    <span>📣</span>
+                    <div class="svc-num">06</div>
+                </div>
+                <div class="svc-name">Community & Growth</div>
+                <div class="svc-desc">Discord management, community building, influencer campaigns & launch strategy.
+                </div>
+                <div class="svc-footer">
+                    <div class="svc-count">660 gigs</div>
+                    <div class="svc-arrow">→</div>
+                </div>
+            </div>
+            <div class="svc-card tilt-card reveal reveal-d3">
+                <div class="svc-icon-wrap" style="background:rgba(201,169,110,0.12)">
+                    <span>🎨</span>
+                    <div class="svc-num">07</div>
+                </div>
+                <div class="svc-name">NFT Creation</div>
+                <div class="svc-desc">Generative art, 1/1 artwork, metadata design, and collection deployment.</div>
+                <div class="svc-footer">
+                    <div class="svc-count">750 gigs</div>
+                    <div class="svc-arrow">→</div>
+                </div>
+            </div>
+            <div class="svc-card tilt-card reveal reveal-d4">
+                <div class="svc-icon-wrap" style="background:rgba(184,201,176,0.2)">
+                    <span>🔬</span>
+                    <div class="svc-num">08</div>
+                </div>
+                <div class="svc-name">Protocol Research</div>
+                <div class="svc-desc">ZK circuit design, cryptography consulting, and litepaper writing.</div>
+                <div class="svc-footer">
+                    <div class="svc-count">190 gigs</div>
+                    <div class="svc-arrow">→</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TALENT -->
+    <section class="talent-section">
+        <div>
+            <div class="section-eyebrow">Top Talent</div>
+            <h2 class="section-title reveal">Featured <em>Freelancers</em></h2>
+        </div>
+        <div class="talent-grid">
+            <div class="talent-card featured-card tilt-card reveal">
+                <div class="talent-av" style="background:linear-gradient(135deg,#e8642c,#c9a96e)">KR</div>
+                <div>
+                    <div class="talent-role">Lead Smart Contract Engineer</div>
+                    <div class="talent-name">Kaito Ryu</div>
+                    <div class="talent-bio">Former core contributor at Uniswap v3. Specializes in DeFi protocol
+                        architecture, gas optimization, and custom EVM tooling. 3 critical vulnerabilities disclosed
+                        responsibly.</div>
+                    <div class="talent-skills">
+                        <span class="skill-tag">Solidity</span><span class="skill-tag">Foundry</span><span
+                            class="skill-tag">EVM</span><span class="skill-tag">DeFi</span><span
+                            class="skill-tag">Hardhat</span>
+                    </div>
+                    <div class="talent-rate-row">
+                        <div class="talent-rate">0.08 ETH <small>/ hour</small></div>
+                        <div>
+                            <div class="stars">★★★★★</div>
+                            <div class="review-count">312 reviews</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="talent-right-meta">
+                    <div class="talent-big-rating">4.99</div>
+                    <div class="talent-reviews-label">Overall score</div>
+                </div>
+            </div>
+
+            <div class="talent-card tilt-card reveal reveal-d1">
+                <div class="talent-av" style="background:linear-gradient(135deg,#0d1b3e,#4a6fa5);margin-bottom:20px">SR
+                </div>
+                <div class="talent-role">Web3 UX Designer</div>
+                <div class="talent-name">Sofia Reyes</div>
+                <div class="talent-bio">10 years designing crypto products. Built UI for 3 top-20 DeFi protocols. Figma
+                    master + frontend-fluent.</div>
+                <div class="talent-skills">
+                    <span class="skill-tag">Figma</span><span class="skill-tag">React</span><span class="skill-tag">dApp
+                        UI</span>
+                </div>
+                <div class="talent-rate-row">
+                    <div class="talent-rate">0.04 ETH <small>/ hr</small></div>
+                    <div>
+                        <div class="stars">★★★★★</div>
+                        <div class="review-count">187 reviews</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="talent-card tilt-card reveal reveal-d2">
+                <div class="talent-av" style="background:linear-gradient(135deg,#b8c9b0,#4a7a40);margin-bottom:20px">AM
+                </div>
+                <div class="talent-role">ZK Proof Engineer</div>
+                <div class="talent-name">Alex Marchetti</div>
+                <div class="talent-bio">Circom and Noir specialist. PhD-level cryptography. Active zkEVM contributor and
+                    researcher.</div>
+                <div class="talent-skills">
+                    <span class="skill-tag">Circom</span><span class="skill-tag">Noir</span><span
+                        class="skill-tag">zkEVM</span>
+                </div>
+                <div class="talent-rate-row">
+                    <div class="talent-rate">0.12 ETH <small>/ hr</small></div>
+                    <div>
+                        <div class="stars">★★★★★</div>
+                        <div class="review-count">89 reviews</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="how-section">
+        <div class="how-bg-text">WORK</div>
+        <div class="section-eyebrow">Process</div>
+        <h2 class="section-title reveal">How It <em>Works</em></h2>
+        <div class="how-steps">
+            <div class="how-step reveal reveal-d1">
+                <div class="step-dot">01</div>
+                <div class="step-title">Connect Wallet</div>
+                <div class="step-desc">Link your Ethereum or any EVM wallet. Your address is your identity — no email
+                    required.</div>
+            </div>
+            <div class="how-step reveal reveal-d2">
+                <div class="step-dot">02</div>
+                <div class="step-title">Post or Browse</div>
+                <div class="step-desc">Post a job on-chain or browse thousands of verified gigs filtered by chain,
+                    skill, and reputation.</div>
+            </div>
+            <div class="how-step reveal reveal-d3">
+                <div class="step-dot">03</div>
+                <div class="step-title">Escrow Funds</div>
+                <div class="step-desc">Funds lock in a smart contract. Neither party can access them until milestones
+                    are approved.</div>
+            </div>
+            <div class="how-step reveal reveal-d4">
+                <div class="step-dot">04</div>
+                <div class="step-title">Release Payment</div>
+                <div class="step-desc">Approve work on-chain. Funds release instantly. Reputation updates automatically.
+                    Zero delays.</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FEATURES -->
+    <section class="features-section">
+        <div>
+            <div class="section-eyebrow">Why Blockchain</div>
+            <h2 class="section-title reveal">Built on <em>Trust</em></h2>
+        </div>
+        <div class="features-grid">
+            <div class="features-list reveal left">
+                <div class="feature-item">
+                    <div class="feature-icon">🔒</div>
+                    <div>
+                        <div class="feature-title">Trustless Escrow</div>
+                        <div class="feature-desc">Smart contracts hold funds until both parties confirm delivery. No
+                            platform can freeze or confiscate.</div>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🌐</div>
+                    <div>
+                        <div class="feature-title">Instant Global Payments</div>
+                        <div class="feature-desc">Pay in ETH, USDC, or any supported token. Settle in seconds, not
+                            business days.</div>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">⭐</div>
+                    <div>
+                        <div class="feature-title">On-Chain Reputation</div>
+                        <div class="feature-desc">Your work history lives on the blockchain permanently. Reviews can't
+                            be deleted or manipulated.</div>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">⚖️</div>
+                    <div>
+                        <div class="feature-title">Decentralized Disputes</div>
+                        <div class="feature-desc">Token holders arbitrate disputes via DAO governance. Fair,
+                            transparent, community-driven.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="features-visual reveal right">
+                <div class="vis-card tilt-card">
+                    <div class="vis-label">
+                        <div class="vis-dot"></div> Smart Contract Escrow
+                    </div>
+                    <div class="vis-amount">0.08 ETH</div>
+                    <div class="vis-sub">Locked · Block #19,847,221</div>
+                    <div
+                        style="margin-top:20px;padding-top:20px;border-top:1px solid var(--border);display:flex;gap:16px">
+                        <div style="flex:1">
+                            <div
+                                style="font-size:10px;color:var(--muted);font-family:'Syne',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px">
+                                Client</div>
+                            <div style="font-family:'DM Sans',monospace;font-size:11px;color:var(--ink)">0xD8a2...F1e4
+                            </div>
+                        </div>
+                        <div style="width:1px;background:var(--border)"></div>
+                        <div style="flex:1">
+                            <div
+                                style="font-size:10px;color:var(--muted);font-family:'Syne',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px">
+                                Freelancer</div>
+                            <div style="font-family:'DM Sans',monospace;font-size:11px;color:var(--ink)">0xA3f9...B2c1
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="vis-card tilt-card">
+                    <div class="vis-hash">TxHash: 0xf4c8...a91d</div>
+                    <div class="vis-status">Payment Released</div>
+                    <div style="margin-top:12px;font-size:12px;color:var(--muted)">Milestone 3 of 3 approved · 2 min ago
+                    </div>
+                </div>
+                <div class="vis-card tilt-card" style="text-align:center">
+                    <div class="vis-mini-label">Rating</div>
+                    <div class="vis-mini-val">4.99</div>
+                    <div style="color:var(--gold);font-size:16px;margin-top:4px">★★★★★</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <div class="cta-section reveal">
+        <div>
+            <div class="cta-eyebrow">Ready to Begin?</div>
+            <h2 class="cta-title">Start Building<br><em>Today</em></h2>
+            <p class="cta-sub">Connect your wallet and access the world's best blockchain talent in under 60 seconds. No
+                account, no email — just your wallet.</p>
+        </div>
+        <div class="cta-actions">
+            <a href="#" class="btn-light">Connect Wallet →</a>
+            <a href="#" class="btn-outline-light">I'm a Freelancer</a>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-grid">
+            <div>
+                <div class="footer-brand-name">Chainwork</div>
+                <div class="footer-brand-desc">A decentralized freelance protocol built on Ethereum. Where talent meets
+                    opportunity — trustlessly.</div>
+                <div class="footer-social">
+                    <a href="#" class="social-btn">𝕏</a>
+                    <a href="#" class="social-btn">in</a>
+                    <a href="#" class="social-btn">⌥</a>
+                    <a href="#" class="social-btn">⬡</a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <div class="footer-col-title">Platform</div>
+                <a href="#">Browse Services</a>
+                <a href="#">Post a Job</a>
+                <a href="#">Find Talent</a>
+                <a href="#">How It Works</a>
+            </div>
+            <div class="footer-col">
+                <div class="footer-col-title">Protocol</div>
+                <a href="#">Smart Contracts</a>
+                <a href="#">Tokenomics</a>
+                <a href="#">Governance</a>
+                <a href="#">Audit Reports</a>
+            </div>
+            <div class="footer-col">
+                <div class="footer-col-title">Community</div>
+                <a href="#">Discord</a>
+                <a href="#">Twitter / X</a>
+                <a href="#">GitHub</a>
+                <a href="#">Blog</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span>© 2025 Chainwork Protocol — All rights reserved</span>
+            <span>Built on Ethereum · Audited by OpenZeppelin</span>
+        </div>
+    </footer>
+
+    <script>
+        /* ─── CURSOR ─── */
+        const dot = document.getElementById('cur-dot');
+        const ring = document.getElementById('cur-ring');
+        let mx = 0, my = 0, rx = 0, ry = 0;
+        document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+        (function anim() {
+            dot.style.left = mx + 'px'; dot.style.top = my + 'px';
+            rx += (mx - rx) * 0.1; ry += (my - ry) * 0.1;
+            ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+            requestAnimationFrame(anim);
+        })();
+        document.querySelectorAll('a,button,.svc-card,.talent-card,.feature-item').forEach(el => {
+            el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+            el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+        });
+
+        /* ─── PARTICLE ORBS ─── */
+        const canvas = document.getElementById('orb-canvas');
+        const ctx = canvas.getContext('2d');
+        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        resize(); window.addEventListener('resize', resize);
+
+        const orbs = [];
+        const COLORS = ['rgba(232,100,44,', 'rgba(201,169,110,', 'rgba(184,201,176,', 'rgba(242,212,194,', 'rgba(13,27,62,'];
+        for (let i = 0; i < 18; i++) {
+            orbs.push({
+                x: Math.random() * window.innerWidth,
+                y: Math.random() * window.innerHeight,
+                r: Math.random() * 180 + 60,
+                dx: (Math.random() - 0.5) * 0.35,
+                dy: (Math.random() - 0.5) * 0.35,
+                color: COLORS[Math.floor(Math.random() * COLORS.length)],
+                alpha: Math.random() * 0.12 + 0.04,
+                phase: Math.random() * Math.PI * 2,
+            });
+        }
+
+        function drawOrbs() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            orbs.forEach(o => {
+                o.phase += 0.008;
+                o.x += o.dx; o.y += o.dy;
+                if (o.x < -o.r) o.x = canvas.width + o.r;
+                if (o.x > canvas.width + o.r) o.x = -o.r;
+                if (o.y < -o.r) o.y = canvas.height + o.r;
+                if (o.y > canvas.height + o.r) o.y = -o.r;
+                const pulse = o.alpha + Math.sin(o.phase) * 0.03;
+                const grad = ctx.createRadialGradient(o.x, o.y, 0, o.x, o.y, o.r);
+                grad.addColorStop(0, o.color + pulse + ')');
+                grad.addColorStop(1, o.color + '0)');
+                ctx.beginPath();
+                ctx.arc(o.x, o.y, o.r, 0, Math.PI * 2);
+                ctx.fillStyle = grad; ctx.fill();
+            });
+            requestAnimationFrame(drawOrbs);
+        }
+        drawOrbs();
+
+        /* ─── 3D CARD TILT ─── */
+        function initTilt(card) {
+            card.addEventListener('mousemove', e => {
+                const r = card.getBoundingClientRect();
+                const x = (e.clientX - r.left) / r.width - 0.5;
+                const y = (e.clientY - r.top) / r.height - 0.5;
+                card.style.transform = `perspective(900px) rotateY(${x * 16}deg) rotateX(${-y * 16}deg) scale3d(1.02,1.02,1.02)`;
+                card.style.transition = 'transform 0.05s';
+                card.style.boxShadow = `${-x * 20}px ${-y * 20}px 60px rgba(15,14,12,0.13)`;
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'perspective(900px) rotateY(0) rotateX(0) scale3d(1,1,1)';
+                card.style.transition = 'transform 0.5s cubic-bezier(.16,1,.3,1), box-shadow 0.5s';
+                card.style.boxShadow = '';
+            });
+        }
+        document.querySelectorAll('.tilt-card').forEach(initTilt);
+
+        // Hero card special
+        const hc = document.getElementById('hero3dCard');
+        if (hc) {
+            hc.parentElement.parentElement.addEventListener('mousemove', e => {
+                const r = hc.getBoundingClientRect();
+                const x = (e.clientX - r.left) / r.width - 0.5;
+                const y = (e.clientY - r.top) / r.height - 0.5;
+                hc.style.transform = `perspective(1200px) rotateY(${x * 12}deg) rotateX(${-y * 12}deg)`;
+                hc.style.transition = 'transform 0.08s';
+            });
+            hc.parentElement.parentElement.addEventListener('mouseleave', () => {
+                hc.style.transform = 'perspective(1200px) rotateY(0) rotateX(0)';
+                hc.style.transition = 'transform 0.6s cubic-bezier(.16,1,.3,1)';
+            });
+        }
+
+        /* ─── NAV SCROLL ─── */
+        window.addEventListener('scroll', () => {
+            document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 60);
+        });
+
+        /* ─── SCROLL REVEAL ─── */
+        const revEls = document.querySelectorAll('.reveal');
+        const ro = new IntersectionObserver(entries => {
+            entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+        }, { threshold: 0.12 });
+        revEls.forEach(el => ro.observe(el));
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,1668 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>SkillBridge - Student Freelance Marketplace with Blockchain Payments</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box
+        }
+
+        :root {
+            --purple: #7C3AED;
+            --purple-light: #A78BFA;
+            --purple-bg: #F3EEFF;
+            --purple-dark: #5B21B6;
+            --yellow: #FBBF24;
+            --yellow-light: #FDE68A;
+            --yellow-bg: #FEF9E7;
+            --dark: #1E1B4B;
+            --text: #4B5563;
+            --bg: #FAF8FF;
+            --white: #FFFFFF;
+            --radius: 16px;
+            --radius-lg: 24px;
+            --radius-full: 9999px;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: var(--bg);
+            color: var(--dark);
+            overflow-x: hidden
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px
+        }
+
+        /* NAV */
+        nav {
+            background: var(--white);
+            padding: 16px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid #EDE9FE
+        }
+
+        nav .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 900;
+            font-size: 1.4rem;
+            color: var(--dark)
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--purple);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 8px
+        }
+
+        .nav-links a {
+            padding: 8px 18px;
+            border-radius: var(--radius-full);
+            font-weight: 700;
+            font-size: .9rem;
+            color: var(--text);
+            transition: .2s
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            background: var(--purple-bg);
+            color: var(--purple)
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 12px
+        }
+
+        .btn {
+            padding: 10px 24px;
+            border-radius: var(--radius-full);
+            font-weight: 800;
+            font-size: .9rem;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: .2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px
+        }
+
+        .btn-outline {
+            background: transparent;
+            border-color: var(--purple);
+            color: var(--purple)
+        }
+
+        .btn-outline:hover {
+            background: var(--purple);
+            color: white
+        }
+
+        .btn-primary {
+            background: var(--purple);
+            color: white;
+            border-color: var(--purple)
+        }
+
+        .btn-primary:hover {
+            background: var(--purple-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(124, 58, 237, .3)
+        }
+
+        .btn-yellow {
+            background: var(--yellow);
+            color: var(--dark);
+            border-color: var(--yellow)
+        }
+
+        .btn-yellow:hover {
+            background: #F59E0B;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(251, 191, 36, .4)
+        }
+
+        /* HERO */
+        .hero {
+            padding: 80px 0 60px;
+            position: relative
+        }
+
+        .hero .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--purple-bg);
+            color: var(--purple);
+            padding: 8px 20px;
+            border-radius: var(--radius-full);
+            font-weight: 700;
+            font-size: .85rem;
+            margin-bottom: 20px
+        }
+
+        .hero h1 {
+            font-size: 3.4rem;
+            font-weight: 900;
+            line-height: 1.15;
+            color: var(--dark);
+            margin-bottom: 20px
+        }
+
+        .hero h1 .highlight-purple {
+            color: var(--purple);
+            font-style: italic;
+            position: relative
+        }
+
+        .hero h1 .highlight-yellow {
+            background: var(--yellow);
+            padding: 2px 12px;
+            border-radius: 8px;
+            font-style: italic
+        }
+
+        .hero p {
+            font-size: 1.15rem;
+            color: var(--text);
+            line-height: 1.7;
+            margin-bottom: 32px;
+            max-width: 500px
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 40px;
+            margin-top: 40px
+        }
+
+        .hero-stat {
+            text-align: center
+        }
+
+        .hero-stat .num {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--purple)
+        }
+
+        .hero-stat .label {
+            font-size: .8rem;
+            color: var(--text);
+            font-weight: 600
+        }
+
+        .hero-visual {
+            position: relative
+        }
+
+        .hero-card-main {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            box-shadow: 0 20px 60px rgba(124, 58, 237, .12);
+            border: 2px solid #EDE9FE;
+            position: relative;
+            z-index: 2
+        }
+
+        .hero-card-main .profile-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px
+        }
+
+        .hero-card-main .avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            border: 3px solid var(--yellow);
+            object-fit: cover
+        }
+
+        .hero-card-main .profile-info h3 {
+            font-size: 1.1rem;
+            font-weight: 800
+        }
+
+        .hero-card-main .profile-info span {
+            font-size: .8rem;
+            color: var(--text)
+        }
+
+        .skill-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px
+        }
+
+        .skill-tag {
+            padding: 6px 14px;
+            border-radius: var(--radius-full);
+            font-size: .75rem;
+            font-weight: 700
+        }
+
+        .skill-tag.purple {
+            background: var(--purple-bg);
+            color: var(--purple)
+        }
+
+        .skill-tag.yellow {
+            background: var(--yellow-bg);
+            color: #92400E
+        }
+
+        .progress-bar-bg {
+            height: 8px;
+            background: #EDE9FE;
+            border-radius: 99px;
+            margin-top: 8px
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--purple), var(--purple-light));
+            border-radius: 99px;
+            width: 75%
+        }
+
+        .hero-float {
+            position: absolute;
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 16px 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, .1);
+            z-index: 3;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: .85rem
+        }
+
+        .hero-float.escrow {
+            top: -10px;
+            right: -20px;
+            border: 2px solid var(--yellow)
+        }
+
+        .hero-float.escrow .icon-circle {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--yellow-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #92400E
+        }
+
+        .hero-float.rating {
+            bottom: 40px;
+            left: -20px;
+            border: 2px solid var(--purple-light)
+        }
+
+        .hero-float.rating .icon-circle {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--purple-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--purple)
+        }
+
+        .blob-purple {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: var(--purple-bg);
+            border-radius: 50%;
+            top: -40px;
+            left: -40px;
+            z-index: 0;
+            opacity: .6
+        }
+
+        .blob-yellow {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            background: var(--yellow-light);
+            border-radius: 50%;
+            bottom: -30px;
+            right: -30px;
+            z-index: 0;
+            opacity: .5
+        }
+
+        .squiggle {
+            position: absolute;
+            z-index: 1;
+            opacity: .4
+        }
+
+        /* FEATURES */
+        .features {
+            padding: 80px 0;
+            background: var(--white)
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 56px
+        }
+
+        .section-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--purple-bg);
+            color: var(--purple);
+            padding: 6px 16px;
+            border-radius: var(--radius-full);
+            font-weight: 700;
+            font-size: .8rem;
+            margin-bottom: 16px
+        }
+
+        .section-header h2 {
+            font-size: 2.4rem;
+            font-weight: 900;
+            color: var(--dark);
+            margin-bottom: 12px
+        }
+
+        .section-header h2 em {
+            font-style: italic;
+            color: var(--purple)
+        }
+
+        .section-header p {
+            font-size: 1.05rem;
+            color: var(--text);
+            max-width: 560px;
+            margin: 0 auto
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px
+        }
+
+        .feature-card {
+            background: var(--bg);
+            border-radius: var(--radius-lg);
+            padding: 36px 28px;
+            border: 2px solid transparent;
+            transition: .3s;
+            cursor: pointer
+        }
+
+        .feature-card:hover {
+            border-color: var(--purple-light);
+            transform: translateY(-6px);
+            box-shadow: 0 16px 40px rgba(124, 58, 237, .1)
+        }
+
+        .feature-card .icon-box {
+            width: 56px;
+            height: 56px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            font-size: 1.6rem
+        }
+
+        .feature-card:nth-child(odd) .icon-box {
+            background: var(--purple-bg);
+            color: var(--purple)
+        }
+
+        .feature-card:nth-child(even) .icon-box {
+            background: var(--yellow-bg);
+            color: #92400E
+        }
+
+        .feature-card h3 {
+            font-size: 1.15rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+            color: var(--dark)
+        }
+
+        .feature-card p {
+            font-size: .9rem;
+            color: var(--text);
+            line-height: 1.6
+        }
+
+        /* HOW IT WORKS */
+        .how-it-works {
+            padding: 80px 0;
+            background: var(--purple-bg)
+        }
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            position: relative
+        }
+
+        .step-card {
+            text-align: center;
+            position: relative;
+            padding: 20px
+        }
+
+        .step-num {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--purple);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 1.2rem;
+            margin: 0 auto 20px
+        }
+
+        .step-card:nth-child(even) .step-num {
+            background: var(--yellow);
+            color: var(--dark)
+        }
+
+        .step-icon {
+            width: 72px;
+            height: 72px;
+            border-radius: 20px;
+            background: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, .06);
+            font-size: 2rem;
+            color: var(--purple)
+        }
+
+        .step-card h3 {
+            font-size: 1.05rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+            color: var(--dark)
+        }
+
+        .step-card p {
+            font-size: .85rem;
+            color: var(--text);
+            line-height: 1.5
+        }
+
+        /* PROFILES */
+        .profiles {
+            padding: 80px 0;
+            background: var(--white)
+        }
+
+        .profiles-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px
+        }
+
+        .profile-card {
+            background: var(--bg);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            border: 2px solid transparent;
+            transition: .3s;
+            cursor: pointer
+        }
+
+        .profile-card:hover {
+            border-color: var(--purple-light);
+            transform: translateY(-6px);
+            box-shadow: 0 16px 40px rgba(124, 58, 237, .12)
+        }
+
+        .profile-card-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover
+        }
+
+        .profile-card-body {
+            padding: 20px
+        }
+
+        .profile-card-body h3 {
+            font-size: 1rem;
+            font-weight: 800;
+            margin-bottom: 4px
+        }
+
+        .profile-card-body .role {
+            font-size: .8rem;
+            color: var(--purple);
+            font-weight: 700;
+            margin-bottom: 12px
+        }
+
+        .profile-card-body .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 14px
+        }
+
+        .profile-card-body .tag {
+            padding: 4px 10px;
+            border-radius: var(--radius-full);
+            font-size: .7rem;
+            font-weight: 700;
+            background: var(--purple-bg);
+            color: var(--purple)
+        }
+
+        .profile-card-body .tag.yl {
+            background: var(--yellow-bg);
+            color: #92400E
+        }
+
+        .profile-card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 12px;
+            border-top: 1px solid #EDE9FE
+        }
+
+        .rating-stars {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: var(--yellow);
+            font-size: .85rem;
+            font-weight: 700
+        }
+
+        .price {
+            font-weight: 800;
+            color: var(--dark);
+            font-size: .95rem
+        }
+
+        /* BLOCKCHAIN */
+        .blockchain {
+            padding: 80px 0;
+            background: linear-gradient(135deg, #1E1B4B 0%, #3B0764 50%, #1E1B4B 100%);
+            color: white;
+            position: relative;
+            overflow: hidden
+        }
+
+        .blockchain .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+            position: relative;
+            z-index: 2
+        }
+
+        .blockchain h2 {
+            font-size: 2.4rem;
+            font-weight: 900;
+            margin-bottom: 16px
+        }
+
+        .blockchain h2 em {
+            color: var(--yellow);
+            font-style: italic
+        }
+
+        .blockchain>p,
+        .bc-desc {
+            font-size: 1.05rem;
+            color: rgba(255, 255, 255, .75);
+            line-height: 1.7;
+            margin-bottom: 32px
+        }
+
+        .bc-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 20px
+        }
+
+        .bc-step {
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+            background: rgba(255, 255, 255, .07);
+            border-radius: var(--radius);
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, .1);
+            backdrop-filter: blur(4px)
+        }
+
+        .bc-step .step-dot {
+            width: 40px;
+            height: 40px;
+            min-width: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: .9rem
+        }
+
+        .bc-step:nth-child(1) .step-dot {
+            background: var(--yellow);
+            color: var(--dark)
+        }
+
+        .bc-step:nth-child(2) .step-dot {
+            background: var(--purple-light);
+            color: white
+        }
+
+        .bc-step:nth-child(3) .step-dot {
+            background: #34D399;
+            color: var(--dark)
+        }
+
+        .bc-step h4 {
+            font-weight: 800;
+            margin-bottom: 4px
+        }
+
+        .bc-step p {
+            font-size: .85rem;
+            color: rgba(255, 255, 255, .65);
+            line-height: 1.5
+        }
+
+        .bc-visual {
+            background: rgba(255, 255, 255, .05);
+            border-radius: var(--radius-lg);
+            padding: 36px;
+            border: 1px solid rgba(255, 255, 255, .1);
+            text-align: center
+        }
+
+        .bc-visual .escrow-box {
+            background: rgba(255, 255, 255, .08);
+            border-radius: var(--radius);
+            padding: 28px;
+            margin-bottom: 20px;
+            border: 2px dashed rgba(251, 191, 36, .3)
+        }
+
+        .bc-visual .escrow-box h3 {
+            color: var(--yellow);
+            font-size: 1.3rem;
+            font-weight: 900;
+            margin-bottom: 4px
+        }
+
+        .bc-visual .escrow-box p {
+            color: rgba(255, 255, 255, .6);
+            font-size: .85rem
+        }
+
+        .bc-visual .flow-arrow {
+            color: var(--purple-light);
+            font-size: 2rem;
+            margin: 12px 0
+        }
+
+        .bc-visual .parties {
+            display: flex;
+            justify-content: space-around;
+            gap: 20px
+        }
+
+        .bc-visual .party {
+            text-align: center
+        }
+
+        .bc-visual .party-avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 8px;
+            font-size: 1.5rem
+        }
+
+        .bc-visual .party:first-child .party-avatar {
+            background: var(--yellow-bg);
+            color: #92400E
+        }
+
+        .bc-visual .party:last-child .party-avatar {
+            background: var(--purple-bg);
+            color: var(--purple)
+        }
+
+        .bc-visual .party h4 {
+            font-size: .9rem;
+            font-weight: 800
+        }
+
+        .bc-visual .party p {
+            font-size: .75rem;
+            color: rgba(255, 255, 255, .5)
+        }
+
+        .blockchain-glow {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: .2
+        }
+
+        .blockchain-glow.g1 {
+            background: var(--purple);
+            top: -100px;
+            right: -100px
+        }
+
+        .blockchain-glow.g2 {
+            background: var(--yellow);
+            bottom: -100px;
+            left: -100px
+        }
+
+        /* TESTIMONIALS */
+        .testimonials {
+            padding: 80px 0;
+            background: var(--bg)
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px
+        }
+
+        .testimonial-card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            border: 2px solid #EDE9FE;
+            transition: .3s
+        }
+
+        .testimonial-card:hover {
+            border-color: var(--purple-light);
+            box-shadow: 0 12px 30px rgba(124, 58, 237, .08)
+        }
+
+        .testimonial-card .stars {
+            color: var(--yellow);
+            font-size: 1rem;
+            margin-bottom: 16px;
+            display: flex;
+            gap: 2px
+        }
+
+        .testimonial-card blockquote {
+            font-size: .95rem;
+            color: var(--text);
+            line-height: 1.7;
+            margin-bottom: 20px;
+            font-style: italic
+        }
+
+        .testimonial-card .author {
+            display: flex;
+            align-items: center;
+            gap: 12px
+        }
+
+        .testimonial-card .author-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--purple-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--purple);
+            font-weight: 900;
+            font-size: 1rem
+        }
+
+        .testimonial-card .author-info h4 {
+            font-weight: 800;
+            font-size: .9rem
+        }
+
+        .testimonial-card .author-info span {
+            font-size: .8rem;
+            color: var(--text)
+        }
+
+        /* CTA */
+        .cta {
+            padding: 80px 0
+        }
+
+        .cta-box {
+            background: var(--purple);
+            border-radius: var(--radius-lg);
+            padding: 64px;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden
+        }
+
+        .cta-box h2 {
+            font-size: 2.4rem;
+            font-weight: 900;
+            margin-bottom: 16px;
+            position: relative;
+            z-index: 2
+        }
+
+        .cta-box p {
+            font-size: 1.1rem;
+            opacity: .85;
+            margin-bottom: 32px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            position: relative;
+            z-index: 2
+        }
+
+        .cta-box .btns {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 2
+        }
+
+        .cta-circle {
+            position: absolute;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, .15)
+        }
+
+        .cta-circle.c1 {
+            width: 300px;
+            height: 300px;
+            top: -100px;
+            right: -80px
+        }
+
+        .cta-circle.c2 {
+            width: 200px;
+            height: 200px;
+            bottom: -60px;
+            left: -40px
+        }
+
+        .cta-circle.c3 {
+            width: 150px;
+            height: 150px;
+            top: 20px;
+            left: 60px;
+            border-color: rgba(251, 191, 36, .3)
+        }
+
+        /* FOOTER */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 60px 0 30px
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px
+        }
+
+        .footer-brand .logo {
+            color: white;
+            margin-bottom: 16px
+        }
+
+        .footer-brand .logo .logo-icon {
+            background: var(--purple)
+        }
+
+        .footer-brand p {
+            font-size: .9rem;
+            color: rgba(255, 255, 255, .6);
+            line-height: 1.6
+        }
+
+        .footer-col h4 {
+            font-weight: 800;
+            margin-bottom: 20px;
+            font-size: .95rem
+        }
+
+        .footer-col ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px
+        }
+
+        .footer-col a {
+            font-size: .85rem;
+            color: rgba(255, 255, 255, .55);
+            transition: .2s
+        }
+
+        .footer-col a:hover {
+            color: var(--yellow)
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, .1);
+            padding-top: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: .8rem;
+            color: rgba(255, 255, 255, .4)
+        }
+
+        .footer-socials {
+            display: flex;
+            gap: 16px
+        }
+
+        .footer-socials a {
+            color: rgba(255, 255, 255, .4);
+            transition: .2s
+        }
+
+        .footer-socials a:hover {
+            color: var(--yellow)
+        }
+
+        /* ANIMATIONS */
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0)
+            }
+
+            50% {
+                transform: translateY(-10px)
+            }
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: .6
+            }
+
+            50% {
+                opacity: 1
+            }
+        }
+
+        .float-anim {
+            animation: float 3s ease-in-out infinite
+        }
+
+        .float-anim-delay {
+            animation: float 3s ease-in-out infinite;
+            animation-delay: .5s
+        }
+
+        /* RESPONSIVE */
+        @media(max-width:1024px) {
+
+            .hero .container,
+            .blockchain .container {
+                grid-template-columns: 1fr
+            }
+
+            .hero h1 {
+                font-size: 2.6rem
+            }
+
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr)
+            }
+
+            .steps-grid {
+                grid-template-columns: repeat(2, 1fr)
+            }
+
+            .profiles-grid {
+                grid-template-columns: repeat(2, 1fr)
+            }
+
+            .hero-visual {
+                max-width: 500px;
+                margin: 0 auto
+            }
+
+            .blockchain .container>div:last-child {
+                max-width: 500px;
+                margin: 0 auto
+            }
+        }
+
+        @media(max-width:768px) {
+            .nav-links {
+                display: none
+            }
+
+            .hero h1 {
+                font-size: 2rem
+            }
+
+            .features-grid,
+            .testimonials-grid {
+                grid-template-columns: 1fr
+            }
+
+            .profiles-grid {
+                grid-template-columns: 1fr 1fr
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr 1fr
+            }
+
+            .cta-box {
+                padding: 40px 24px
+            }
+
+            .hero-stats {
+                gap: 24px
+            }
+
+            .hero-float {
+                display: none
+            }
+        }
+
+        @media(max-width:480px) {
+
+            .profiles-grid,
+            .steps-grid {
+                grid-template-columns: 1fr
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr
+            }
+
+            .hero-buttons {
+                flex-direction: column
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVIGATION -->
+    <nav>
+        <div class="container">
+            <a href="#" class="logo">
+                <div class="logo-icon"><span class="material-symbols-outlined">hub</span></div>
+                SkillBridge
+            </a>
+            <div class="nav-links">
+                <a href="#features" class="active">Home</a>
+                <a href="#how">How It Works</a>
+                <a href="#profiles">Students</a>
+                <a href="#blockchain">Blockchain</a>
+            </div>
+            <div class="nav-right">
+                <button class="btn btn-outline">Sign In</button>
+                <button class="btn btn-primary">Contact Us <span class="material-symbols-outlined"
+                        style="font-size:1rem">arrow_forward</span></button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="container">
+            <div>
+                <div class="hero-badge"><span class="material-symbols-outlined"
+                        style="font-size:1rem">rocket_launch</span> Global Student Marketplace</div>
+                <h1>The best place to <span class="highlight-purple">hire</span> and <span
+                        class="highlight-yellow">grow</span> for students</h1>
+                <p>Connect with talented students worldwide. Secure blockchain-powered escrow payments ensure trust and
+                    transparency for every project.</p>
+                <div class="hero-buttons">
+                    <button class="btn btn-primary" style="padding:14px 32px;font-size:1rem">Get Started <span
+                            class="material-symbols-outlined" style="font-size:1.1rem">arrow_forward</span></button>
+                    <button class="btn btn-yellow" style="padding:14px 32px;font-size:1rem">Browse Students</button>
+                </div>
+                <div class="hero-stats">
+                    <div class="hero-stat">
+                        <div class="num">12K+</div>
+                        <div class="label">Students</div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="num">8K+</div>
+                        <div class="label">Projects</div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="num">95%</div>
+                        <div class="label">Satisfaction</div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="num">50+</div>
+                        <div class="label">Countries</div>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="blob-purple"></div>
+                <div class="blob-yellow"></div>
+                <div class="hero-card-main float-anim">
+                    <div class="profile-row">
+                        <img class="avatar" src="student1.png" alt="Student Priya"
+                            onerror="this.style.background='var(--purple-bg)';this.alt='PS'" />
+                        <div class="profile-info">
+                            <h3>Priya Sharma</h3>
+                            <span>Full-Stack Developer · Mumbai</span>
+                        </div>
+                    </div>
+                    <div class="skill-tags">
+                        <span class="skill-tag purple">React.js</span>
+                        <span class="skill-tag yellow">Node.js</span>
+                        <span class="skill-tag purple">Solidity</span>
+                        <span class="skill-tag yellow">UI/UX</span>
+                    </div>
+                    <div style="font-size:.8rem;font-weight:700;color:var(--text)">Project Progress — 75%</div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill"></div>
+                    </div>
+                </div>
+                <div class="hero-float escrow float-anim-delay">
+                    <div class="icon-circle"><span class="material-symbols-outlined"
+                            style="font-size:1.1rem">lock</span></div>
+                    <div>
+                        <div style="font-size:.75rem;color:var(--text)">Escrow</div>
+                        <div style="color:var(--dark)">$1,250</div>
+                    </div>
+                </div>
+                <div class="hero-float rating float-anim">
+                    <div class="icon-circle"><span class="material-symbols-outlined"
+                            style="font-size:1.1rem">star</span></div>
+                    <div>
+                        <div style="font-size:.75rem;color:var(--text)">Rating</div>
+                        <div style="color:var(--dark)">4.9/5.0</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FEATURES -->
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-badge"><span class="material-symbols-outlined"
+                        style="font-size:.9rem">auto_awesome</span> Features</div>
+                <h2>Our <em>interactive</em> features</h2>
+                <p>Everything students and clients need to collaborate, deliver, and get paid securely.</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="icon-box"><span class="material-symbols-outlined">person_pin</span></div>
+                    <h3>Student Portfolios</h3>
+                    <p>Showcase skills, GitHub repos, past projects, and certifications in a beautiful profile.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="icon-box"><span class="material-symbols-outlined">account_balance_wallet</span></div>
+                    <h3>Blockchain Escrow</h3>
+                    <p>Smart contract-powered payments. Funds are locked until work is approved — fair for both parties.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="icon-box"><span class="material-symbols-outlined">flag</span></div>
+                    <h3>Milestone Payments</h3>
+                    <p>Break large projects into milestones. Funds release step-by-step as each phase is completed.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="icon-box"><span class="material-symbols-outlined">chat_bubble</span></div>
+                    <h3>Real-time Messaging</h3>
+                    <p>Built-in chat system for seamless communication between students and clients throughout projects.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="icon-box"><span class="material-symbols-outlined">stars</span></div>
+                    <h3>Ratings & Reviews</h3>
+                    <p>Build credibility through verified reviews. Help future clients make confident hiring decisions.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="icon-box"><span class="material-symbols-outlined">receipt_long</span></div>
+                    <h3>Transaction History</h3>
+                    <p>Full blockchain transparency. Track every payment, milestone, and escrow release on-chain.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="how-it-works" id="how">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-badge"><span class="material-symbols-outlined" style="font-size:.9rem">route</span>
+                    Process</div>
+                <h2>How <em>SkillBridge</em> works</h2>
+                <p>From project posting to secure payment — here's how it all comes together.</p>
+            </div>
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-num">1</div>
+                    <div class="step-icon"><span class="material-symbols-outlined">edit_document</span></div>
+                    <h3>Post a Project</h3>
+                    <p>Clients describe their project, set a budget, and define milestones.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-num">2</div>
+                    <div class="step-icon"><span class="material-symbols-outlined">group_add</span></div>
+                    <h3>Match with Students</h3>
+                    <p>Browse student profiles and portfolios to find the perfect match.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-num">3</div>
+                    <div class="step-icon"><span class="material-symbols-outlined">lock</span></div>
+                    <h3>Escrow Payment</h3>
+                    <p>Client deposits funds into a blockchain smart contract escrow.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-num">4</div>
+                    <div class="step-icon"><span class="material-symbols-outlined">verified</span></div>
+                    <h3>Deliver & Get Paid</h3>
+                    <p>On approval, smart contract releases funds to the student's wallet.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- STUDENT PROFILES -->
+    <section class="profiles" id="profiles">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-badge"><span class="material-symbols-outlined" style="font-size:.9rem">school</span>
+                    Talent</div>
+                <h2>Meet our <em>top students</em></h2>
+                <p>Talented students from around the world ready to bring your projects to life.</p>
+            </div>
+            <div class="profiles-grid">
+                <div class="profile-card">
+                    <img class="profile-card-img" src="student1.png" alt="Priya Sharma"
+                        onerror="this.style.background='linear-gradient(135deg,#EDE9FE,#FDE68A)';this.style.height='200px'" />
+                    <div class="profile-card-body">
+                        <h3>Priya Sharma</h3>
+                        <div class="role">Full-Stack Developer</div>
+                        <div class="tags"><span class="tag">React</span><span class="tag yl">Node.js</span><span
+                                class="tag">MongoDB</span></div>
+                        <div class="profile-card-footer">
+                            <div class="rating-stars"><span class="material-symbols-outlined"
+                                    style="font-size:1rem">star</span> 4.9</div>
+                            <div class="price">From $25/hr</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="profile-card">
+                    <img class="profile-card-img" src="student2.png" alt="James Okonkwo"
+                        onerror="this.style.background='linear-gradient(135deg,#EDE9FE,#FDE68A)';this.style.height='200px'" />
+                    <div class="profile-card-body">
+                        <h3>James Okonkwo</h3>
+                        <div class="role">Blockchain Developer</div>
+                        <div class="tags"><span class="tag">Solidity</span><span class="tag yl">Ethereum</span><span
+                                class="tag">Web3</span></div>
+                        <div class="profile-card-footer">
+                            <div class="rating-stars"><span class="material-symbols-outlined"
+                                    style="font-size:1rem">star</span> 5.0</div>
+                            <div class="price">From $30/hr</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="profile-card">
+                    <img class="profile-card-img" src="student3.png" alt="Yuki Tanaka"
+                        onerror="this.style.background='linear-gradient(135deg,#EDE9FE,#FDE68A)';this.style.height='200px'" />
+                    <div class="profile-card-body">
+                        <h3>Yuki Tanaka</h3>
+                        <div class="role">UI/UX Designer</div>
+                        <div class="tags"><span class="tag">Figma</span><span class="tag yl">Adobe XD</span><span
+                                class="tag">CSS</span></div>
+                        <div class="profile-card-footer">
+                            <div class="rating-stars"><span class="material-symbols-outlined"
+                                    style="font-size:1rem">star</span> 4.8</div>
+                            <div class="price">From $22/hr</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="profile-card">
+                    <img class="profile-card-img" src="student4.png" alt="Carlos Rivera"
+                        onerror="this.style.background='linear-gradient(135deg,#EDE9FE,#FDE68A)';this.style.height='200px'" />
+                    <div class="profile-card-body">
+                        <h3>Carlos Rivera</h3>
+                        <div class="role">Mobile App Developer</div>
+                        <div class="tags"><span class="tag">Flutter</span><span class="tag yl">Firebase</span><span
+                                class="tag">Dart</span></div>
+                        <div class="profile-card-footer">
+                            <div class="rating-stars"><span class="material-symbols-outlined"
+                                    style="font-size:1rem">star</span> 4.7</div>
+                            <div class="price">From $28/hr</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- BLOCKCHAIN SECTION -->
+    <section class="blockchain" id="blockchain">
+        <div class="blockchain-glow g1"></div>
+        <div class="blockchain-glow g2"></div>
+        <div class="container">
+            <div>
+                <div class="section-badge" style="background:rgba(255,255,255,.1);color:var(--yellow)"><span
+                        class="material-symbols-outlined" style="font-size:.9rem">token</span> Blockchain</div>
+                <h2>Secure payments with <em>smart contracts</em></h2>
+                <p class="bc-desc">No middlemen. No delays. Our blockchain-powered escrow system ensures every payment
+                    is secure, transparent, and automatic.</p>
+                <div class="bc-steps">
+                    <div class="bc-step">
+                        <div class="step-dot">1</div>
+                        <div>
+                            <h4>Client Deposits Funds</h4>
+                            <p>Payment is locked in a smart contract before work begins. Both parties are protected.</p>
+                        </div>
+                    </div>
+                    <div class="bc-step">
+                        <div class="step-dot">2</div>
+                        <div>
+                            <h4>Student Delivers Work</h4>
+                            <p>Student completes milestones and submits deliverables for client review.</p>
+                        </div>
+                    </div>
+                    <div class="bc-step">
+                        <div class="step-dot">3</div>
+                        <div>
+                            <h4>Auto-Release Payment</h4>
+                            <p>Upon approval, the smart contract automatically releases funds to the student's wallet.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div class="bc-visual">
+                    <div class="parties" style="margin-bottom:24px">
+                        <div class="party">
+                            <div class="party-avatar"><span class="material-symbols-outlined">business</span></div>
+                            <h4>Client</h4>
+                            <p>Deposits payment</p>
+                        </div>
+                        <div class="party">
+                            <div class="party-avatar"><span class="material-symbols-outlined">school</span></div>
+                            <h4>Student</h4>
+                            <p>Receives payment</p>
+                        </div>
+                    </div>
+                    <div class="flow-arrow"><span class="material-symbols-outlined"
+                            style="font-size:2rem;opacity:.4">arrow_downward</span></div>
+                    <div class="escrow-box">
+                        <span class="material-symbols-outlined"
+                            style="font-size:2.5rem;color:var(--yellow);margin-bottom:8px">enhanced_encryption</span>
+                        <h3>Smart Contract Escrow</h3>
+                        <p>Funds are securely locked on-chain until milestones are approved</p>
+                        <div style="margin-top:16px;display:flex;justify-content:center;gap:24px;font-size:.8rem">
+                            <div><span
+                                    style="color:var(--yellow);font-weight:900;font-size:1.2rem">$48K+</span><br />Total
+                                Escrowed</div>
+                            <div><span style="color:#34D399;font-weight:900;font-size:1.2rem">1.2K</span><br />Completed
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <section class="testimonials">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-badge"><span class="material-symbols-outlined"
+                        style="font-size:.9rem">format_quote</span> Reviews</div>
+                <h2>What people <em>say</em></h2>
+                <p>Hear from students and clients who've used SkillBridge.</p>
+            </div>
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <div class="stars"><span class="material-symbols-outlined">star</span><span
+                            class="material-symbols-outlined">star</span><span
+                            class="material-symbols-outlined">star</span><span
+                            class="material-symbols-outlined">star</span><span
+                            class="material-symbols-outlined">star</span></div>
+                    <blockquote>"SkillBridge helped me land my first international client while still in college. The
+                        escrow system gave both of us confidence."</blockquote>
+                    <div class="author">
+                        <div class="author-avatar">AS</div>
+                        <div class="author-info">
+                            <h4>Arjun Singh</h4><span>CS Student, Delhi</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="stars"><span class="material-symbols-outlined">star</span><span
+                            class="material-symbols-outlined">star</span><span
+                            class="material-symbols-outlined">star</span><span
+                            class="material-symbols-outlined">star</span><span
+                            class="material-symbols-outlined">star</span></div>
+                    <blockquote>"Finding talented student developers used to be hard. SkillBridge made it incredibly
+                        easy with verified portfolios and secure payments."</blockquote>
+                    <div class="author">
+                        <div class="author-avatar" style="background:var(--yellow-bg);color:#92400E">MK</div>
+                        <div class="author-info">
+                            <h4>Maria Klein</h4><span>Startup CEO, Berlin</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="stars"><span class="material-symbols-outlined">star</span><span
+                            class="material-symbols-outlined">star</span><span
+                            class="material-symbols-outlined">star</span><span
+                            class="material-symbols-outlined">star</span><span
+                            class="material-symbols-outlined">star</span></div>
+                    <blockquote>"The milestone payment system is genius. I could track progress and release funds
+                        incrementally. Truly transparent and fair."</blockquote>
+                    <div class="author">
+                        <div class="author-avatar">TN</div>
+                        <div class="author-info">
+                            <h4>Tom Nguyen</h4><span>Product Manager, SF</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta">
+        <div class="container">
+            <div class="cta-box">
+                <div class="cta-circle c1"></div>
+                <div class="cta-circle c2"></div>
+                <div class="cta-circle c3"></div>
+                <h2>Ready to bridge skills with opportunity?</h2>
+                <p>Join thousands of students and clients building the future of work — powered by blockchain trust.</p>
+                <div class="btns">
+                    <button class="btn btn-yellow" style="padding:16px 36px;font-size:1rem">Join as Student</button>
+                    <button class="btn"
+                        style="padding:16px 36px;font-size:1rem;background:transparent;border-color:rgba(255,255,255,.4);color:white">Hire
+                        a Student</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="#" class="logo">
+                        <div class="logo-icon"><span class="material-symbols-outlined">hub</span></div>
+                        SkillBridge
+                    </a>
+                    <p>The trusted marketplace connecting talented students with global clients. Powered by blockchain
+                        for secure, transparent freelancing.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Platform</h4>
+                    <ul>
+                        <li><a href="#">Browse Students</a></li>
+                        <li><a href="#">Post a Project</a></li>
+                        <li><a href="#">How It Works</a></li>
+                        <li><a href="#">Pricing</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Smart Contract Audit</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 SkillBridge. All rights reserved.</p>
+                <div class="footer-socials">
+                    <a href="#"><span class="material-symbols-outlined">public</span></a>
+                    <a href="#"><span class="material-symbols-outlined">share</span></a>
+                    <a href="#"><span class="material-symbols-outlined">mail</span></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scroll for nav links
+        document.querySelectorAll('a[href^="#"]').forEach(a => {
+            a.addEventListener('click', e => {
+                e.preventDefault();
+                const t = document.querySelector(a.getAttribute('href'));
+                if (t) t.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+        // Intersection Observer for fade-in animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(e => {
+                if (e.isIntersecting) { e.target.style.opacity = '1'; e.target.style.transform = 'translateY(0)' }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.feature-card,.step-card,.profile-card,.testimonial-card,.bc-step').forEach(el => {
+            el.style.opacity = '0'; el.style.transform = 'translateY(30px)'; el.style.transition = 'opacity .6s,transform .6s';
+            observer.observe(el);
+        });
+    </script>
+</body>
+
+</html>
