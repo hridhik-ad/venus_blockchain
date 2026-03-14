@@ -3,18 +3,20 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/context/AuthContext";
+import { useAuth, UserRole } from "@/context/AuthContext";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
+  const [role, setRole] = useState<UserRole>("buyer");
   const { login } = useAuth();
   const router = useRouter();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email) return;
-    login(email, "Explorer");
-    router.push("/");
+    if (!email || !name) return;
+    login(email, name, role);
+    router.push(role === "seller" ? "/seller/dashboard" : "/");
   };
 
   return (
@@ -24,19 +26,48 @@ export default function LoginPage() {
           <div style={{ display: 'flex', justifyContent: 'center' }}>
             <Link href="/" className="auth-logo">SkillUP <span>Beta</span></Link>
           </div>
-          
+
           <div className="auth-header" style={{ marginTop: "40px" }}>
             <div className="section-eyebrow">Welcome Back</div>
             <h1 className="section-title">Sign In</h1>
             <p className="auth-sub">Access your decentralized workspace.</p>
           </div>
 
+          {/* Role Toggle */}
+          <div className="role-toggle">
+            <button
+              type="button"
+              className={`role-btn ${role === "buyer" ? "active" : ""}`}
+              onClick={() => setRole("buyer")}
+            >
+              🛒 Buyer
+            </button>
+            <button
+              type="button"
+              className={`role-btn ${role === "seller" ? "active" : ""}`}
+              onClick={() => setRole("seller")}
+            >
+              🔧 Seller
+            </button>
+          </div>
+
           <form className="auth-form" onSubmit={handleSubmit}>
             <div className="form-group">
+              <label>Full Name</label>
+              <input
+                type="text"
+                placeholder="Your name"
+                className="cw-input"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+              />
+            </div>
+            <div className="form-group">
               <label>Email Address</label>
-              <input 
-                type="email" 
-                placeholder="name@example.com" 
+              <input
+                type="email"
+                placeholder="name@example.com"
                 className="cw-input"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -47,14 +78,14 @@ export default function LoginPage() {
               <label>Password</label>
               <input type="password" placeholder="••••••••" className="cw-input" required />
             </div>
-            
+
             <button type="submit" className="btn-primary auth-submit">
-              Sign In to Protocol →
+              Sign In as {role === "buyer" ? "Buyer" : "Seller"} →
             </button>
           </form>
 
           <footer className="auth-footer">
-            <p>Don't have an account? <Link href="/signup">Create One</Link></p>
+            <p>Don&apos;t have an account? <Link href="/signup">Create One</Link></p>
             <Link href="/" className="back-link">← Back to Marketplace</Link>
           </footer>
         </div>
@@ -75,7 +106,7 @@ export default function LoginPage() {
           width: 100%;
           max-width: 540px;
           background: #fff;
-          padding: 80px;
+          padding: 60px 80px 80px;
           border-radius: 40px;
           border: 1px solid var(--border);
           box-shadow: 0 10px 40px rgba(0,0,0,0.03);
@@ -100,13 +131,43 @@ export default function LoginPage() {
           letter-spacing: 1px;
         }
         .auth-header {
-          margin-bottom: 48px;
+          margin-bottom: 32px;
         }
         .auth-sub {
           color: var(--muted);
           margin-top: 12px;
           font-size: 16px;
           line-height: 1.6;
+        }
+        .role-toggle {
+          display: flex;
+          gap: 0;
+          margin-bottom: 32px;
+          background: #f5f5f0;
+          border-radius: 100px;
+          padding: 4px;
+          border: 1px solid var(--border);
+        }
+        .role-btn {
+          flex: 1;
+          padding: 14px 20px;
+          border: none;
+          border-radius: 100px;
+          font-family: 'Syne', sans-serif;
+          font-weight: 700;
+          font-size: 14px;
+          cursor: pointer;
+          transition: all 0.3s cubic-bezier(.16,1,.3,1);
+          background: transparent;
+          color: var(--muted);
+        }
+        .role-btn.active {
+          background: var(--ink);
+          color: var(--cream);
+          box-shadow: 0 4px 16px rgba(15,14,12,0.15);
+        }
+        .role-btn:not(.active):hover {
+          color: var(--ink);
         }
         .auth-form {
           display: flex;

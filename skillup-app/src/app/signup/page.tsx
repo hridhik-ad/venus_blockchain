@@ -3,20 +3,29 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/context/AuthContext";
+import { useAuth, UserRole } from "@/context/AuthContext";
 
 export default function SignupPage() {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [walletAddress, setWalletAddress] = useState("");
+  const [role, setRole] = useState<UserRole>("buyer");
+  const [title, setTitle] = useState("");
+  const [skills, setSkills] = useState("");
+  const [bio, setBio] = useState("");
   const { login } = useAuth();
   const router = useRouter();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !name) return;
-    login(email, name, walletAddress || undefined);
-    router.push("/");
+
+    const extra = role === "seller"
+      ? { title: title || "Freelancer", skills: skills.split(",").map(s => s.trim()).filter(Boolean), bio }
+      : undefined;
+
+    login(email, name, role, walletAddress || undefined, extra);
+    router.push(role === "seller" ? "/seller/dashboard" : "/");
   };
 
   return (
@@ -26,19 +35,37 @@ export default function SignupPage() {
           <div style={{ display: 'flex', justifyContent: 'center' }}>
             <Link href="/" className="auth-logo">SkillUP <span>Beta</span></Link>
           </div>
-          
+
           <div className="auth-header" style={{ marginTop: "40px" }}>
             <div className="section-eyebrow">Get Started</div>
             <h1 className="section-title">Join the Protocol</h1>
             <p className="auth-sub">Create your on-chain professional identity.</p>
           </div>
 
+          {/* Role Toggle */}
+          <div className="role-toggle">
+            <button
+              type="button"
+              className={`role-btn ${role === "buyer" ? "active" : ""}`}
+              onClick={() => setRole("buyer")}
+            >
+              🛒 I&apos;m a Buyer
+            </button>
+            <button
+              type="button"
+              className={`role-btn ${role === "seller" ? "active" : ""}`}
+              onClick={() => setRole("seller")}
+            >
+              🔧 I&apos;m a Seller
+            </button>
+          </div>
+
           <form className="auth-form" onSubmit={handleSubmit}>
-             <div className="form-group">
+            <div className="form-group">
               <label>Full Name</label>
-              <input 
-                type="text" 
-                placeholder="Alex Marchetti" 
+              <input
+                type="text"
+                placeholder="Alex Marchetti"
                 className="cw-input"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
@@ -47,9 +74,9 @@ export default function SignupPage() {
             </div>
             <div className="form-group">
               <label>Email Address</label>
-              <input 
-                type="email" 
-                placeholder="name@example.com" 
+              <input
+                type="email"
+                placeholder="name@example.com"
                 className="cw-input"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -58,25 +85,62 @@ export default function SignupPage() {
             </div>
             <div className="form-group">
               <label>Wallet Address (Optional)</label>
-              <input 
-                type="text" 
-                placeholder="0x..." 
+              <input
+                type="text"
+                placeholder="0x..."
                 className="cw-input"
                 value={walletAddress}
                 onChange={(e) => setWalletAddress(e.target.value)}
               />
             </div>
             <div className="form-group">
-              <label>Desired Role</label>
-              <select className="cw-input" style={{ appearance: "none" }}>
-                <option>Freelancer</option>
-                <option>Client / Project Lead</option>
-                <option>Protocol Delegate</option>
-              </select>
+              <label>Password</label>
+              <input type="password" placeholder="••••••••" className="cw-input" required />
             </div>
-            
+
+            {/* Seller-Specific Fields */}
+            {role === "seller" && (
+              <>
+                <div className="seller-fields-divider">
+                  <span>Seller Profile Details</span>
+                </div>
+                <div className="form-group">
+                  <label>Professional Title</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Smart Contract Developer"
+                    className="cw-input"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Skills (comma-separated)</label>
+                  <input
+                    type="text"
+                    placeholder="Solidity, React, Figma"
+                    className="cw-input"
+                    value={skills}
+                    onChange={(e) => setSkills(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Short Bio</label>
+                  <textarea
+                    placeholder="Tell buyers about your experience..."
+                    className="cw-input cw-textarea"
+                    value={bio}
+                    onChange={(e) => setBio(e.target.value)}
+                    rows={3}
+                  />
+                </div>
+              </>
+            )}
+
             <button type="submit" className="btn-primary auth-submit">
-              Create Profile →
+              {role === "buyer" ? "Create Buyer Account →" : "Create Seller Profile →"}
             </button>
           </form>
 
@@ -102,7 +166,7 @@ export default function SignupPage() {
           width: 100%;
           max-width: 540px;
           background: #fff;
-          padding: 80px;
+          padding: 60px 80px 80px;
           border-radius: 40px;
           border: 1px solid var(--border);
           box-shadow: 0 10px 40px rgba(0,0,0,0.03);
@@ -127,13 +191,64 @@ export default function SignupPage() {
           letter-spacing: 1px;
         }
         .auth-header {
-          margin-bottom: 48px;
+          margin-bottom: 32px;
         }
         .auth-sub {
           color: var(--muted);
           margin-top: 12px;
           font-size: 16px;
           line-height: 1.6;
+        }
+        .role-toggle {
+          display: flex;
+          gap: 0;
+          margin-bottom: 32px;
+          background: #f5f5f0;
+          border-radius: 100px;
+          padding: 4px;
+          border: 1px solid var(--border);
+        }
+        .role-btn {
+          flex: 1;
+          padding: 14px 20px;
+          border: none;
+          border-radius: 100px;
+          font-family: 'Syne', sans-serif;
+          font-weight: 700;
+          font-size: 14px;
+          cursor: pointer;
+          transition: all 0.3s cubic-bezier(.16,1,.3,1);
+          background: transparent;
+          color: var(--muted);
+        }
+        .role-btn.active {
+          background: var(--ink);
+          color: var(--cream);
+          box-shadow: 0 4px 16px rgba(15,14,12,0.15);
+        }
+        .role-btn:not(.active):hover {
+          color: var(--ink);
+        }
+        .seller-fields-divider {
+          display: flex;
+          align-items: center;
+          text-align: center;
+          margin: 8px 0;
+          color: var(--muted);
+          font-family: 'Syne', sans-serif;
+          font-size: 11px;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 1.5px;
+        }
+        .seller-fields-divider::before,
+        .seller-fields-divider::after {
+          content: '';
+          flex: 1;
+          border-bottom: 1px solid var(--border);
+        }
+        .seller-fields-divider span {
+          padding: 0 16px;
         }
         .auth-form {
           display: flex;
@@ -149,6 +264,7 @@ export default function SignupPage() {
           letter-spacing: 1.5px;
           margin-bottom: 10px;
           color: var(--muted);
+          text-align: left;
         }
         .cw-input {
           width: 100%;
@@ -160,6 +276,14 @@ export default function SignupPage() {
           font-size: 15px;
           outline: none;
           transition: all 0.3s;
+        }
+        .cw-textarea {
+          border-radius: 24px;
+          resize: vertical;
+          min-height: 80px;
+          font-family: 'DM Sans', sans-serif;
+          font-size: 14px;
+          line-height: 1.6;
         }
         .cw-input:focus {
           border-color: var(--ink);

@@ -107,11 +107,11 @@ export default function ServicesPage() {
 
         <div className="services-grid">
           {SERVICES_DATA.map((svc, idx) => (
-            <div 
-              key={svc.id} 
+            <Link
+              key={svc.id}
+              href={`/services/${svc.id}`}
               className={`svc-card tilt-card reveal reveal-d${(idx % 4) + 1}`}
-              onClick={(e) => handleServiceClick(e, svc.name)}
-              style={{ cursor: "pointer" }}
+              style={{ textDecoration: 'none', color: 'inherit' }}
             >
               <div className="svc-icon-wrap" style={{ background: svc.color }}>
                 <span>{svc.icon}</span>
@@ -123,7 +123,7 @@ export default function ServicesPage() {
                 <span className="svc-count">{svc.count}</span>
                 <span className="svc-arrow">→</span>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </section>

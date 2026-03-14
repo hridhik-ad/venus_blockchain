@@ -89,7 +89,7 @@ export default function Home() {
             <Link href="/talent" className="btn-primary">
               Browse Talent →
             </Link>
-            <Link href="#" className="btn-ghost">
+            <Link href="/how-it-works" className="btn-ghost">
               How it Works
             </Link>
           </div>
@@ -607,10 +607,10 @@ export default function Home() {
           </p>
         </div>
         <div className="cta-actions">
-          <Link href="#" className="btn-light">
-            Connect Wallet →
+          <Link href="/how-it-works" className="btn-light">
+            List My Services →
           </Link>
-          <Link href="#" className="btn-outline-light">
+          <Link href="/how-it-works" className="btn-outline-light">
             I&apos;m a Freelancer
           </Link>
         </div>
