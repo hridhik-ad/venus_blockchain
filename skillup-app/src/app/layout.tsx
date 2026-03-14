@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+import InteractiveBackground from "@/components/InteractiveBackground";
 
 export const metadata: Metadata = {
   title: "CHAINWORK — Decentralized Freelance",
@@ -17,7 +20,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           rel="stylesheet"
         />
       </head>
-      <body>{children}</body>
+      <body>
+        <InteractiveBackground />
+        <Navbar />
+        {children}
+        <Footer />
+      </body>
     </html>
   );
 }

@@ -8,97 +8,6 @@ export default function Home() {
   const tiltCardsRef = useRef<NodeListOf<Element> | null>(null);
 
   useEffect(() => {
-    // ─── CURSOR ───
-    const dot = document.getElementById("cur-dot");
-    const ring = document.getElementById("cur-ring");
-    let mx = 0, my = 0, rx = 0, ry = 0;
-
-    const handleMouseMove = (e: MouseEvent) => {
-      mx = e.clientX;
-      my = e.clientY;
-    };
-    document.addEventListener("mousemove", handleMouseMove);
-
-    let animFrame: number;
-    const anim = () => {
-      if (dot && ring) {
-        dot.style.left = mx + "px";
-        dot.style.top = my + "px";
-        rx += (mx - rx) * 0.1;
-        ry += (my - ry) * 0.1;
-        ring.style.left = rx + "px";
-        ring.style.top = ry + "px";
-      }
-      animFrame = requestAnimationFrame(anim);
-    };
-    anim();
-
-    const hoverEls = document.querySelectorAll("a,button,.svc-card,.talent-card,.feature-item");
-    const handleMouseEnter = () => document.body.classList.add("hovering");
-    const handleMouseLeave = () => document.body.classList.remove("hovering");
-
-    hoverEls.forEach((el) => {
-      el.addEventListener("mouseenter", handleMouseEnter);
-      el.addEventListener("mouseleave", handleMouseLeave);
-    });
-
-    // ─── PARTICLE ORBS ───
-    const canvas = canvasRef.current;
-    let ctx: CanvasRenderingContext2D | null = null;
-    let orbs: any[] = [];
-    let orbFrame: number;
-
-    if (canvas) {
-      ctx = canvas.getContext("2d");
-      const resize = () => {
-        if (canvas) {
-          canvas.width = window.innerWidth;
-          canvas.height = window.innerHeight;
-        }
-      };
-      resize();
-      window.addEventListener("resize", resize);
-
-      const COLORS = ["rgba(232,100,44,", "rgba(201,169,110,", "rgba(184,201,176,", "rgba(242,212,194,", "rgba(13,27,62,"];
-      for (let i = 0; i < 18; i++) {
-        orbs.push({
-          x: Math.random() * window.innerWidth,
-          y: Math.random() * window.innerHeight,
-          r: Math.random() * 180 + 60,
-          dx: (Math.random() - 0.5) * 0.35,
-          dy: (Math.random() - 0.5) * 0.35,
-          color: COLORS[Math.floor(Math.random() * COLORS.length)],
-          alpha: Math.random() * 0.12 + 0.04,
-          phase: Math.random() * Math.PI * 2,
-        });
-      }
-
-      const drawOrbs = () => {
-        const currentCtx = ctx;
-        if (!currentCtx || !canvas) return;
-        currentCtx.clearRect(0, 0, canvas.width, canvas.height);
-        orbs.forEach((o) => {
-          o.phase += 0.008;
-          o.x += o.dx;
-          o.y += o.dy;
-          if (o.x < -o.r) o.x = canvas.width + o.r;
-          if (o.x > canvas.width + o.r) o.x = -o.r;
-          if (o.y < -o.r) o.y = canvas.height + o.r;
-          if (o.y > canvas.height + o.r) o.y = -o.r;
-          const pulse = o.alpha + Math.sin(o.phase) * 0.03;
-          const grad = currentCtx.createRadialGradient(o.x, o.y, 0, o.x, o.y, o.r);
-          grad.addColorStop(0, o.color + pulse + ")");
-          grad.addColorStop(1, o.color + "0)");
-          currentCtx.beginPath();
-          currentCtx.arc(o.x, o.y, o.r, 0, Math.PI * 2);
-          currentCtx.fillStyle = grad;
-          currentCtx.fill();
-        });
-        orbFrame = requestAnimationFrame(drawOrbs);
-      };
-      drawOrbs();
-    }
-
     // ─── 3D CARD TILT ───
     tiltCardsRef.current = document.querySelectorAll(".tilt-card");
     const initTilt = (card: Element) => {
@@ -119,7 +28,6 @@ export default function Home() {
       };
       htmlCard.addEventListener("mousemove", handleTiltMove);
       htmlCard.addEventListener("mouseleave", handleTiltLeave);
-      // store references for cleanup if needed, but simple page replace is fine
     };
     tiltCardsRef.current.forEach(initTilt);
 
@@ -139,15 +47,6 @@ export default function Home() {
       });
     }
 
-    // ─── NAV SCROLL ───
-    const handleNavScroll = () => {
-      const navbar = document.getElementById("navbar");
-      if (navbar) {
-        navbar.classList.toggle("scrolled", window.scrollY > 60);
-      }
-    };
-    window.addEventListener("scroll", handleNavScroll);
-
     // ─── SCROLL REVEAL ───
     const revEls = document.querySelectorAll(".reveal");
     const ro = new IntersectionObserver(
@@ -164,47 +63,14 @@ export default function Home() {
 
     // Cleanup
     return () => {
-      document.removeEventListener("mousemove", handleMouseMove);
-      cancelAnimationFrame(animFrame);
-      cancelAnimationFrame(orbFrame);
-      window.removeEventListener("scroll", handleNavScroll);
-      hoverEls.forEach((el) => {
-        el.removeEventListener("mouseenter", handleMouseEnter);
-        el.removeEventListener("mouseleave", handleMouseLeave);
-      });
+      // tilt listener cleanup could be added if needed
     };
+
   }, []);
 
   return (
     <>
-      <div id="cur-dot"></div>
-      <div id="cur-ring"></div>
-      <canvas id="orb-canvas" ref={canvasRef}></canvas>
-
-      {/* NAV */}
-      <nav id="navbar" className="cw-nav">
-        <Link href="#" className="nav-brand">
-          Chainwork
-          <span className="brand-badge">Beta</span>
-        </Link>
-        <ul className="nav-links">
-          <li>
-            <Link href="#">Services</Link>
-          </li>
-          <li>
-            <Link href="#">Talent</Link>
-          </li>
-          <li>
-            <Link href="#">How It Works</Link>
-          </li>
-          <li>
-            <Link href="#">Protocol</Link>
-          </li>
-        </ul>
-        <Link href="#" className="nav-btn">
-          Connect Wallet
-        </Link>
-      </nav>
+      {/* Page content only, Navbar and Footer are in layout.tsx */}
 
       {/* HERO */}
       <section className="hero">
@@ -220,7 +86,7 @@ export default function Home() {
             trustless, reputations are on-chain, and opportunity has no borders.
           </p>
           <div className="hero-actions">
-            <Link href="#" className="btn-primary">
+            <Link href="/talent" className="btn-primary">
               Browse Talent →
             </Link>
             <Link href="#" className="btn-ghost">
@@ -336,7 +202,7 @@ export default function Home() {
               All <em>Services</em>
             </h2>
           </div>
-          <Link href="#" className="view-all-link">
+          <Link href="/services" className="view-all-link">
             Browse All
           </Link>
         </div>
@@ -458,11 +324,16 @@ export default function Home() {
 
       {/* TALENT */}
       <section className="talent-section">
-        <div>
-          <div className="section-eyebrow">Top Talent</div>
-          <h2 className="section-title reveal">
-            Featured <em>Freelancers</em>
-          </h2>
+        <div className="section-header">
+          <div>
+            <div className="section-eyebrow">Top Talent</div>
+            <h2 className="section-title reveal">
+              Featured <em>Freelancers</em>
+            </h2>
+          </div>
+          <Link href="/talent" className="view-all-link">
+            Browse All
+          </Link>
         </div>
         <div className="talent-grid">
           <div className="talent-card featured-card tilt-card reveal">
@@ -745,49 +616,6 @@ export default function Home() {
         </div>
       </div>
 
-      {/* FOOTER */}
-      <footer>
-        <div className="footer-grid">
-          <div>
-            <div className="footer-brand-name">Chainwork</div>
-            <div className="footer-brand-desc">
-              A decentralized freelance protocol built on Ethereum. Where talent meets
-              opportunity — trustlessly.
-            </div>
-            <div className="footer-social">
-              <Link href="#" className="social-btn">𝕏</Link>
-              <Link href="#" className="social-btn">in</Link>
-              <Link href="#" className="social-btn">⌥</Link>
-              <Link href="#" className="social-btn">⬡</Link>
-            </div>
-          </div>
-          <div className="footer-col">
-            <div className="footer-col-title">Platform</div>
-            <Link href="#">Browse Services</Link>
-            <Link href="#">Post a Job</Link>
-            <Link href="#">Find Talent</Link>
-            <Link href="#">How It Works</Link>
-          </div>
-          <div className="footer-col">
-            <div className="footer-col-title">Protocol</div>
-            <Link href="#">Smart Contracts</Link>
-            <Link href="#">Tokenomics</Link>
-            <Link href="#">Governance</Link>
-            <Link href="#">Audit Reports</Link>
-          </div>
-          <div className="footer-col">
-            <div className="footer-col-title">Community</div>
-            <Link href="#">Discord</Link>
-            <Link href="#">Twitter / X</Link>
-            <Link href="#">GitHub</Link>
-            <Link href="#">Blog</Link>
-          </div>
-        </div>
-        <div className="footer-bottom">
-          <span>© 2026 Chainwork Protocol — All rights reserved</span>
-          <span>Built on Ethereum · Audited by OpenZeppelin</span>
-        </div>
-      </footer>
     </>
   );
 }
