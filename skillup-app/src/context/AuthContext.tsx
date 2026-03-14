@@ -12,7 +12,7 @@ interface AuthContextType {
   isLoggedIn: boolean;
   user: User | null;
   showAuthModal: boolean;
-  login: (email: string, name?: string) => void;
+  login: (email: string, name?: string, walletAddress?: string) => void;
   logout: () => void;
   openAuthModal: () => void;
   closeAuthModal: () => void;
@@ -35,8 +35,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  const login = (email: string, name: string = "User") => {
-    const userData = { name, email, address: "0x71C...a2B9" };
+  const login = (email: string, name: string = "User", walletAddress: string = "0x71C...a2B9") => {
+    const userData = { name, email, address: walletAddress };
     setIsLoggedIn(true);
     setUser(userData);
     localStorage.setItem("cw_auth", JSON.stringify(userData));

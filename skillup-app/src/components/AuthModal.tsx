@@ -10,9 +10,9 @@ export default function AuthModal() {
   if (!showAuthModal) return null;
 
   return (
-    <div className="auth-modal-overlay" onClick={closeAuthModal}>
+    <div className="auth-modal-overlay">
       <div className="auth-modal-content" onClick={(e) => e.stopPropagation()}>
-        <button className="auth-modal-close" onClick={closeAuthModal}>×</button>
+        {/* Close button removed to make modal mandatory */}
         
         <div className="auth-header">
           <div className="section-eyebrow">Authentication</div>
@@ -21,20 +21,14 @@ export default function AuthModal() {
         </div>
 
         <div className="auth-options">
-          <button className="nav-btn auth-wallet-btn" onClick={() => login("wallet@skillup.io", "Wallet User")}>
-            <span>🦊</span> Connect MetaMask
-          </button>
+          <Link href="/login" className="btn-primary" style={{ textAlign: "center", width: "100%" }} onClick={closeAuthModal}>
+            Login to Account
+          </Link>
+          <Link href="/signup" className="nav-btn auth-wallet-btn" style={{ justifyContent: "center" }} onClick={closeAuthModal}>
+            Create New Account
+          </Link>
           
-          <div className="auth-divider">
-            <span>or continue with email</span>
-          </div>
-
-          <div className="auth-form-compact">
-            <input type="email" placeholder="Email address" className="cw-input" />
-            <Link href="/login" className="btn-primary" style={{ textAlign: "center", width: "100%" }} onClick={closeAuthModal}>
-              Sign In →
-            </Link>
-          </div>
+          {/* Simplified to redirect options as requested */}
         </div>
 
         <p className="auth-footer">

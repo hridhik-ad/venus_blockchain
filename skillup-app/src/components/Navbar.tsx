@@ -68,9 +68,9 @@ export default function Navbar() {
             <button onClick={logout} className="nav-logout-btn">Logout</button>
           </div>
         ) : (
-          <button onClick={openAuthModal} className="nav-btn">
-            Connect Wallet
-          </button>
+          <Link href="/login" className="nav-btn">
+            Login / Signup
+          </Link>
         )
       )}
 

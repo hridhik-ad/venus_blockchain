@@ -8,13 +8,14 @@ import { useAuth } from "@/context/AuthContext";
 export default function SignupPage() {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
+  const [walletAddress, setWalletAddress] = useState("");
   const { login } = useAuth();
   const router = useRouter();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !name) return;
-    login(email, name);
+    login(email, name, walletAddress || undefined);
     router.push("/");
   };
 
@@ -53,6 +54,16 @@ export default function SignupPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+              />
+            </div>
+            <div className="form-group">
+              <label>Wallet Address (Optional)</label>
+              <input 
+                type="text" 
+                placeholder="0x..." 
+                className="cw-input"
+                value={walletAddress}
+                onChange={(e) => setWalletAddress(e.target.value)}
               />
             </div>
             <div className="form-group">
