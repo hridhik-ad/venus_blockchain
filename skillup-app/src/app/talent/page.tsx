@@ -1,9 +1,8 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import Link from "next/link";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import { useAuth } from "@/context/AuthContext";
 
 const TALENT_DATA = [
   {
@@ -82,6 +81,16 @@ const TALENT_DATA = [
 
 export default function TalentPage() {
   const tiltCardsRef = useRef<NodeListOf<Element> | null>(null);
+  const { isLoggedIn, openAuthModal } = useAuth();
+
+  const handleHireClick = (e: React.MouseEvent, name: string) => {
+    e.preventDefault();
+    if (!isLoggedIn) {
+      openAuthModal();
+    } else {
+      alert(`Hiring process started for ${name}!`);
+    }
+  };
 
   useEffect(() => {
     // ─── 3D CARD TILT ───
@@ -118,95 +127,93 @@ export default function TalentPage() {
       { threshold: 0.1 }
     );
     revEls.forEach((el) => ro.observe(el));
-
-    // Cleanup
-    return () => {
-      // tilt listener cleanup could be added if needed
-    };
   }, []);
 
   return (
-    <>
-      <main className="talent-page" style={{ paddingTop: "140px" }}>
-        <section className="talent-section">
-          <div className="section-header">
-            <div>
-              <div className="section-eyebrow">Discover</div>
-              <h1 className="section-title reveal">
-                Web3 <em>Talent</em>
-              </h1>
-              <p className="hero-sub reveal" style={{ marginTop: "20px" }}>
-                Connect with the world's most elite blockchain professionals. Our talent are verified on-chain and reviewed by the community.
-              </p>
-            </div>
-          </div>
-
-          <div className="talent-grid">
-            {TALENT_DATA.map((talent, idx) => (
-              <div 
-                key={talent.id} 
-                className={`talent-card tilt-card reveal ${talent.featured ? 'featured-card' : `reveal-d${(idx % 3) + 1}`}`}
-                style={talent.featured ? { gridColumn: "1 / -1" } : {}}
-              >
-                <div 
-                  className="talent-av" 
-                  style={{ 
-                    background: talent.color,
-                    marginBottom: talent.featured ? "0" : "20px" 
-                  }}
-                >
-                  {talent.id}
-                </div>
-                <div>
-                  <div className="talent-role">{talent.role}</div>
-                  <div className="talent-name">{talent.name}</div>
-                  <div className="talent-bio">{talent.bio}</div>
-                  <div className="talent-skills">
-                    {talent.skills.map(skill => (
-                      <span key={skill} className="skill-tag">{skill}</span>
-                    ))}
-                  </div>
-                  <div className="talent-rate-row">
-                    <div className="talent-rate">
-                      {talent.rate} <small>/ hour</small>
-                    </div>
-                    <div>
-                      <div className="stars">★★★★★</div>
-                      <div className="review-count">{talent.reviews} reviews</div>
-                    </div>
-                  </div>
-                </div>
-                {talent.featured && (
-                   <div className="talent-right-meta">
-                    <div className="talent-big-rating">{talent.rating}</div>
-                    <div className="talent-reviews-label">Overall score</div>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* CTA */}
-        <div className="cta-section reveal" style={{ margin: "140px 60px" }}>
+    <main className="talent-page" style={{ paddingTop: "140px" }}>
+      <section className="talent-section">
+        <div className="section-header">
           <div>
-            <div className="cta-eyebrow">Are you a Web3 expert?</div>
-            <h2 className="cta-title">
-              Join the <em>Protocol</em>
-            </h2>
-            <p className="cta-sub">
-              Create your on-chain profile and start receiving gigs from the best Web3 projects. Your reputation is your most valuable asset.
+            <div className="section-eyebrow">Discover</div>
+            <h1 className="section-title reveal">
+              Web3 <em>Talent</em>
+            </h1>
+            <p className="hero-sub reveal" style={{ marginTop: "20px" }}>
+              Connect with the world's most elite blockchain professionals. Our talent are verified on-chain and reviewed by the community.
             </p>
           </div>
-          <div className="cta-actions">
-            <Link href="#" className="btn-light">
-              Become a Freelancer →
-            </Link>
-          </div>
         </div>
-      </main>
 
-      <Footer />
-    </>
+        <div className="talent-grid">
+          {TALENT_DATA.map((talent, idx) => (
+            <div 
+              key={talent.id} 
+              className={`talent-card tilt-card reveal ${talent.featured ? 'featured-card' : `reveal-d${(idx % 3) + 1}`}`}
+              style={talent.featured ? { gridColumn: "1 / -1" } : {}}
+            >
+              <div 
+                className="talent-av" 
+                style={{ 
+                  background: talent.color,
+                  marginBottom: talent.featured ? "0" : "20px" 
+                }}
+              >
+                {talent.id}
+              </div>
+              <div style={{ flex: 1 }}>
+                <div className="talent-role">{talent.role}</div>
+                <div className="talent-name">{talent.name}</div>
+                <div className="talent-bio">{talent.bio}</div>
+                <div className="talent-skills">
+                  {talent.skills.map(skill => (
+                    <span key={skill} className="skill-tag">{skill}</span>
+                  ))}
+                </div>
+                <div className="talent-rate-row">
+                  <div className="talent-rate">
+                    {talent.rate} <small>/ hour</small>
+                  </div>
+                  <div>
+                    <div className="stars">★★★★★</div>
+                    <div className="review-count">{talent.reviews} reviews</div>
+                  </div>
+                </div>
+                <button 
+                  className="btn-primary" 
+                  style={{ marginTop: "24px", width: "100%", height: "50px" }}
+                  onClick={(e) => handleHireClick(e, talent.name)}
+                >
+                  Hire Now →
+                </button>
+              </div>
+              {talent.featured && (
+                  <div className="talent-right-meta">
+                  <div className="talent-big-rating">{talent.rating}</div>
+                  <div className="talent-reviews-label">Overall score</div>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* CTA */}
+      <div className="cta-section reveal" style={{ margin: "140px 60px" }}>
+        <div>
+          <div className="cta-eyebrow">Are you a Web3 expert?</div>
+          <h2 className="cta-title">
+            Join the <em>Protocol</em>
+          </h2>
+          <p className="cta-sub">
+            Create your on-chain profile and start receiving gigs from the best Web3 projects. Your reputation is your most valuable asset.
+          </p>
+        </div>
+        <div className="cta-actions">
+          <Link href="/signup" className="btn-light">
+            Become a Freelancer →
+          </Link>
+        </div>
+      </div>
+    </main>
   );
 }

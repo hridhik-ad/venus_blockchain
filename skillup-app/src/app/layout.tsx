@@ -3,9 +3,11 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import InteractiveBackground from "@/components/InteractiveBackground";
+import { AuthProvider } from "@/context/AuthContext";
+import AuthModal from "@/components/AuthModal";
 
 export const metadata: Metadata = {
-  title: "CHAINWORK — Decentralized Freelance",
+  title: "SkillUP — Decentralized Freelance",
   description: "A decentralized marketplace where smart contracts replace middlemen.",
 };
 
@@ -21,10 +23,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body>
-        <InteractiveBackground />
-        <Navbar />
-        {children}
-        <Footer />
+        <AuthProvider>
+          <AuthModal />
+          <InteractiveBackground />
+          <Navbar />
+          {children}
+          <Footer />
+        </AuthProvider>
       </body>
     </html>
   );

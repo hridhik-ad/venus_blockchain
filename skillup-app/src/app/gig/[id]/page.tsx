@@ -120,7 +120,7 @@ export default function GigDetailPage() {
                                         Deposit & Hire →
                                     </button>
                                     <p className="text-center font-ui text-[10px] text-muted">
-                                        ⛽ <span className="font-bold text-accent">Gas Sponsored</span> by Chainwork
+                                        ⛽ <span className="font-bold text-accent">Gas Sponsored</span> by SkillUP
                                     </p>
                                 </div>
                             </ScrollReveal>

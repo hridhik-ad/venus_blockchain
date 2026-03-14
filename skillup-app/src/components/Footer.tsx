@@ -5,7 +5,7 @@ export default function Footer() {
     <footer>
       <div className="footer-grid">
         <div>
-          <div className="footer-brand-name">Chainwork</div>
+          <div className="footer-brand-name">SkillUP</div>
           <div className="footer-brand-desc">
             A decentralized freelance protocol built on Ethereum. Where talent meets
             opportunity — trustlessly.
@@ -40,7 +40,7 @@ export default function Footer() {
         </div>
       </div>
       <div className="footer-bottom">
-        <span>© 2026 Chainwork Protocol — All rights reserved</span>
+        <span>© 2026 SkillUP Protocol — All rights reserved</span>
         <span>Built on Ethereum · Audited by OpenZeppelin</span>
       </div>
     </footer>
