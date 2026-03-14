@@ -346,9 +346,9 @@ export default function Home() {
               <span>⬡</span>
               <div className="svc-num">01</div>
             </div>
-            <div className="svc-name">Smart Contract Dev</div>
+            <div className="svc-name">Graphics & Design</div>
             <div className="svc-desc">
-              Solidity, Rust, and Move developers ready to build audited, gas-optimized contracts.
+              High-quality visuals, UI/UX, and branding for web3 projects.
             </div>
             <div className="svc-footer">
               <div className="svc-count">1,240 gigs</div>
@@ -360,9 +360,9 @@ export default function Home() {
               <span>◈</span>
               <div className="svc-num">02</div>
             </div>
-            <div className="svc-name">Web3 Design</div>
+            <div className="svc-name">Full Stack Developer</div>
             <div className="svc-desc">
-              UI/UX designers specializing in dApps, NFT platforms, and DeFi dashboards.
+              End-to-end development for dApps, websites, and custom web3 solutions.
             </div>
             <div className="svc-footer">
               <div className="svc-count">870 gigs</div>
@@ -374,9 +374,9 @@ export default function Home() {
               <span>◎</span>
               <div className="svc-num">03</div>
             </div>
-            <div className="svc-name">Token Engineering</div>
+            <div className="svc-name">Video Editing</div>
             <div className="svc-desc">
-              Tokenomics design, whitepaper writing, and economic modeling for your protocol.
+              Professional video editing for YouTube, social media, and marketing.
             </div>
             <div className="svc-footer">
               <div className="svc-count">420 gigs</div>
@@ -388,9 +388,9 @@ export default function Home() {
               <span>🛡</span>
               <div className="svc-num">04</div>
             </div>
-            <div className="svc-name">Security Audits</div>
+            <div className="svc-name">Music Production</div>
             <div className="svc-desc">
-              On-chain verified audit reports from top-ranked security researchers worldwide.
+              Professional audio engineering, mixing, mastering, and sound design for music and podcasts.
             </div>
             <div className="svc-footer">
               <div className="svc-count">310 gigs</div>
@@ -430,9 +430,9 @@ export default function Home() {
               <span>🎨</span>
               <div className="svc-num">07</div>
             </div>
-            <div className="svc-name">NFT Creation</div>
+            <div className="svc-name">Content Creation</div>
             <div className="svc-desc">
-              Generative art, 1/1 artwork, metadata design, and collection deployment.
+              Blog posts, articles, whitepapers, and marketing copy for web3 projects.
             </div>
             <div className="svc-footer">
               <div className="svc-count">750 gigs</div>
@@ -444,9 +444,9 @@ export default function Home() {
               <span>🔬</span>
               <div className="svc-num">08</div>
             </div>
-            <div className="svc-name">Protocol Research</div>
+            <div className="svc-name">Digital Marketing</div>
             <div className="svc-desc">
-              ZK circuit design, cryptography consulting, and litepaper writing.
+              Social media management, content marketing, SEO, and growth strategies for web3 projects.
             </div>
             <div className="svc-footer">
               <div className="svc-count">190 gigs</div>
